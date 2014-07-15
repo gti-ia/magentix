@@ -361,7 +361,8 @@ positionCardinality(member, panel, 2)
 
 
 \begin{verbatim}
-/*Forum: It is not allowed to register new roles with the position \textit{creator}*/
+/*Forum: It is not allowed registering new roles with
+the position creator*/
 isNorm(noRegRole, forum)
 hasDeontic(noRegRole, forum, f)
 hasTarget(noRegRole, forum, positionName, creator)
@@ -369,7 +370,8 @@ hasAction(noRegRole, forum, registerRole)
 \end{verbatim}
 
 \begin{verbatim}
-/*Forum: Changing the parent unit of the organization is prohibit*/
+/*Forum: Changing the parent unit of the organization 
+is prohibit*/
 isNorm(noRegRole, forum)
 hasDeontic(noJoinUnit, forum, f)
 hasTarget(noJoinUnit, forum, positionName, _)
@@ -377,7 +379,7 @@ hasAction(noJoinUnit, forum, joinUnit)
 \end{verbatim}
 
 \begin{verbatim}
-/*Fraternity: Only one agent can play the role \textit{president}*/
+/*Fraternity: Only one agent can play the role president*/
 isNorm(noAcRolePresident, fraternity)
 hasDeontic(noAcRolePresident, fraternity, f)
 hasTarget(noAcRolePresident, fraternity, agentName, _)
@@ -385,7 +387,7 @@ hasAction(noAcRolePresident, fraternity, acquireRole)
 \end{verbatim}
 
 \begin{verbatim}
-/*Fraternity: Only the role \textit{president} can add new norms*/
+/*Fraternity: Only the role president can add new norms*/
 isNorm(noRegNorm, fraternity)
 hasDeontic(noRegNorm, fraternity, f)
 hasTarget(noRegNorm, fraternity, positionName,member)
@@ -393,7 +395,7 @@ hasAction(noRegNorm, fraternity, registerNorm)
 \end{verbatim}
 
 \begin{verbatim}
-/*Fraternity: Only the role \textit{president} can delete norms*/
+/*Fraternity: Only the role president can delete norms*/
 isNorm(noDeregNorm, fraternity)
 hasDeontic(noDeregNorm, fraternity, f)
 hasTarget(noDeregNorm, fraternity, positionName,member)
@@ -401,7 +403,7 @@ hasAction(noDeregNorm, fraternity, deregisterNorm)
 \end{verbatim}
 
 \begin{verbatim}
-/*Fraternity: Only the role \textit{president} can add roles*/
+/*Fraternity: Only the role president can add roles*/
 isNorm(noRegRole, fraternity)
 hasDeontic(noRegRole, fraternity, f)
 hasTarget(noRegRole, fraternity, positionName,member)
@@ -409,7 +411,7 @@ hasAction(noRegRole, fraternity, registerRole)
 \end{verbatim}
 
 \begin{verbatim}
-/*Fraternity: Only the role \textit{president} can delete roles*/
+/*Fraternity: Only the role president can delete roles*/
 isNorm(noDeRegRole, fraternity)
 hasDeontic(noDeRegRole, fraternity, f)
 hasTarget(noDeRegRole, fraternity, positionName,member)
@@ -418,7 +420,8 @@ hasAction(noDeRegRole, fraternity, deregisterRole)
 
 
 \begin{verbatim}
-/*Fraternity: It is not allowed to register new roles with the position \textit{creator}*/
+/*Fraternity: It is not allowed registering new roles 
+with the position creator*/
 isNorm(noRegRoleCreator, fraternity)
 hasDeontic(noRegRoleCreator, fraternity, f)
 hasTarget(noRegRoleCreator, fraternity, agentName,_)
@@ -426,10 +429,96 @@ hasAction(noRegRoleCreator, fraternity, registerRole)
 \end{verbatim}
 
 \begin{verbatim}
-/*Fraternity: Changing the parent unit of the organization is prohibit*/
-isNorm(noRegRole, fraternity)
+/*Fraternity: Changing the parent unit of the organization 
+is prohibit */
+isNorm(noJoinUnit, fraternity)
 hasDeontic(noJoinUnit, fraternity, f)
 hasTarget(noJoinUnit, fraternity, positionName, _)
 hasAction(noJoinUnit, fraternity, joinUnit)
+\end{verbatim}
+
+\begin{verbatim}
+/*Panel: Only one agent can play the role moderator */
+isNorm(noAcRoleModerator, panel)
+hasDeontic(noAcRoleModerator, panel, f)
+hasTarget(noAcRoleModerator, panel, agentname, _)
+hasAction(noAcRoleModerator, panel, acquiereRole)
+\end{verbatim}
+
+\begin{verbatim}
+/*Panel: The agent which plays the role moderator should 
+play the role moderator in the forum unit */
+isNorm(controlAcRoleModerator, panel)
+hasDeontic(controlAcRoleModerator, panel, f)
+hasTarget(controlAcRoleModerator, panel, agentname, _)
+hasAction(controlAcRoleModerator, panel, acquiereRole)
+\end{verbatim}
+
+\begin{verbatim}
+/*Panel: Only the role moderator can add norms */
+isNorm(noRegNorm, panel)
+hasDeontic(noRegNorm, panel, f)
+hasTarget(noRegNorm, panel, agentname, Ag)
+hasAction(noRegNorm, panel, registerNorm)
+\end{verbatim}
+
+\begin{verbatim}
+/*Panel: Only the role moderator can delete norms */
+isNorm(noDeregNorm, panel)
+hasDeontic(noDeregNorm, panel, f)
+hasTarget(noDeregNorm, panel, agentname, Ag)
+hasAction(noDeregNorm, panel, deregisterNorm)
+\end{verbatim}
+
+
+\begin{verbatim}
+/*Panel: No one can add roles */
+isNorm(noRegRole, panel)
+hasDeontic(noRegRole, panel, f)
+hasTarget(noRegRole, panel, positionName, _)
+hasAction(noRegRole, panel, registerRole)
+
+isNorm(noDeRegNormRegRole, panel)
+hasDeontic(noDeRegNormRegRole, panel, f)
+hasTarget(noDeRegNormRegRole, panel, roleName, moderator)
+hasAction(noDeRegNormRegRole, panel, registerNorm)
+\end{verbatim}
+
+
+\begin{verbatim}
+/*Panel: No one can delete roles */
+isNorm(noDeRegRole, panel)
+hasDeontic(noDeRegRole, panel, f)
+hasTarget(noDeRegRole, panel, positionName, _)
+hasAction(noDeRegRole, panel, deregisterRole)
+
+isNorm(noDeRegNormDeregRole, panel)
+hasDeontic(noDeRegNormDeregRole, panel, f)
+hasTarget(noDeRegNormDeregRole, panel, roleName, moderator)
+hasAction(noDeRegNormDeregRole, panel, registerNorm)
+\end{verbatim}
+
+\begin{verbatim}
+/*Panel: Knowing which roles are played by other agents 
+is prohibit */
+isNorm(noSupInfAgRole, panel)
+hasDeontic(noSupInfAgRole, panel, f)
+hasTarget(noSupInfAgRole, panel, agentName, Ag)
+hasAction(noSupInfAgRole, panel, informAgentRole)
+
+isNorm(noDeRegNormNoSupInfAgRole, panel)
+hasDeontic(noDeRegNormNoSupInfAgRole, panel, f)
+hasTarget(noDeRegNormNoSupInfAgRole, panel, roleName, moderator)
+hasAction(noDeRegNormNoSupInfAgRole, panel, registerNorm)
+\end{verbatim}
+
+
+\begin{verbatim}
+/*Panel: Changing the parent unit of the organization 
+is prohibit */
+isNorm(noJoinUnit, Panel)
+hasDeontic(noJoinUnit, Panel, f)
+hasTarget(noJoinUnit, Panel, positionName, _)
+hasAction(noJoinUnit, Panel, joinUnit)
 \end{verbatim}
 

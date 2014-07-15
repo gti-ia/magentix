@@ -220,7 +220,7 @@ These services are  published in the SF and also available thought the OMSproxy 
 
 
 
-There are some predefined norms(called structural norms) which control the access to OMS services. Thus, some OMS services are only available if  agents which request them play a role inside the organization with a concrete position (table \ref{tab:rol_acces}). It is possible to avoid these structural norms or make them more restrictive by means of defining new norms using the \textit{registerNorm} service of the OMS. In this way, users can add \textsc{Permitted} or \textsc{Forbidden}  norms to relax or restrict  the access control to the OMS services in an organization. 
+There are some predefined norms (called structural norms) which control the access to OMS services. Thus, some OMS services are only available if  agents which request them play some role inside the organization with a concrete position (table \ref{tab:rol_acces}). It is possible to avoid these structural norms or make them more restrictive by means of defining new norms using the \textit{registerNorm} service of the OMS. In this way, users can add \textsc{Permitted} or \textsc{Forbidden}  norms to relax or restrict  the access control to the OMS services in an organization. 
 
 
 \begin{table}[h!t]
@@ -260,23 +260,23 @@ InformNorm & x & x & x &x  \\
 \end{table}
 
 \subsubsection{Norm Description}
-Norms are registered into a organizational unit with a unique name inside that organization. They should be written following the syntax of the \textsc{Thomas} normative language (see appendix \ref{app:BNFSyntax} for a detailed explanation). Concretely, a appearance of a norm is as follows : \\
+Norms are registered into an organizational unit with a unique name inside that organization. They should be written following the syntax of the \textsc{Thomas} normative language (see appendix \ref{app:BNFSyntax} for a detailed explanation). Concretely, the appearance of a norm is as follows : \\
 $@normName[Deontic, Target, Action, Activation, Expiration]$ where:
 \begin{itemize}
- \item $Deontic \in \lbrace f,o,p \rbrace$ , where $f$ is used for norms forbidden norms, which restrict the access to services; $o$ is used for obligation norms; and $p$ is used for permitted norms, which relax the access to services. Although a norm can be registered with a deontic value  of obligation, the OMS only manage forbidden or permitted norms. 	
- \item $Target=<type,id>$ where $type \in   \lbrace agentName, roleName, positionName \rbrace $, whereas $id$ is the associated value (for example, the position value \textit{creator}) or the anonymous variable $\_$ (when any value is accepted).  The field \textit{target} allows users to determine which agents will be affected by a norm. For example, taking into account an scenario in which a norm was registered in a unit with the target $<agentName, consumer>$, this norm only affects the agent which name is \textit{consumer}. 
+ \item $Deontic \in \lbrace f,o,p \rbrace$ , where $f$ is used for forbidden norms, which restrict the access to services; $o$ is used for obligation norms; and $p$ is used for permitted norms, which relax the access to services. Although a norm can be registered with a deontic value  of obligation, the OMS only manage forbidden or permitted norms. 	
+ \item $Target=<type,id>$ where $type \in   \lbrace agentName, roleName, positionName \rbrace $, whereas $id$ is the associated value (for example, the position value \textit{creator}) or the anonymous variable ``\_'' (when any value is accepted).  The field \textit{target} allows users to determine which agents will be affected by a norm. For example, taking into account an scenario in which a norm was registered in a unit with the target $<agentName, consumer>$, this norm only affects the agent which name is \textit{consumer}. 
  
  \item $Action$ is the name of the service. \textsc{Thomas} only manage norms which action correspond with an OMS service.
  
- \item $Activation$ is a well-formed formula expressed by means of first-order predicates which indicates the conditions to fulfil a norm. Until a service is provided, the OMS agent checks if some norm is satisfied, in which case that norm is applied. Users should add predicates related with data known in the \textsc{Thomas} world, such as roles details, roles played, organization structure, agent names, etc (see \ref{app:BNFSyntax} for further explanation). This field could be empty, in that case the norm is always fulfilled.
+ \item $Activation$ is a well-formed formula expressed by means of first-order predicates which indicates the conditions to fulfil a norm. Until a service is provided, the OMS agent checks if some norm is satisfied, in which case that norm is applied. Users should add predicates related with data known in the \textsc{Thomas} world, such as role details, played roles , organization structure, agent names, etc (see \ref{app:BNFSyntax} for further explanation). The \textit{Activation}  could be empty (``\_'' ), in that case the norm is always fulfilled.
  
- \item  $Expiration$ is a well-formed formula expressed by means of first-order predicates which indicates when a norm expires. So, if the expiration of a norm is satisfied, the norm is not applied although the activation is fulfilled. Users should add predicates related with data known in the \textsc{Thomas} world, such as roles details, roles played, organization structure, agent names, etc (see \ref{app:BNFSyntax} for further explanation). This field could be empty, in that case the norm never expires.
+ \item  $Expiration$ is a well-formed formula expressed by means of first-order predicates which indicates when a norm expires. So, if the expiration of a norm is satisfied, the norm is not applied although the activation is fulfilled. Users should add predicates related with data known in the \textsc{Thomas} world, such as role details, played roles , organization structure, agent names, etc (see \ref{app:BNFSyntax} for further explanation). The  \textit{Expiration} could be empty (``\_'' ), in that case the norm never expires.
  
 \end{itemize}
 
 \subsubsection{Norm Checking}
 
-The OMS agent is the responsible of verify if some norm applies before provide a service. Thus, users can add forbidden or permitted norms to restrict or relax the predefined rules of access to services,  respectively. In particular, the order in which the restrictions and norms are checked before provide a service of the OMS is as follows: 
+The OMS agent is the responsible of verifying if some norm applies before provide a service. Thus, users can add forbidden or permitted norms to restrict or relax the predefined rules for accessing to services,  respectively. In particular, the order in which the restrictions and norms are checked before provide a service of the OMS is as follows: 
 \begin{enumerate}
 \item \textit{Checking of the input parameters}. The consistency of the given data (existing roles, valid organizations, etc.) is checked.
 
@@ -284,7 +284,7 @@ The OMS agent is the responsible of verify if some norm applies before provide a
 
 \item \textit{\textsc{Permitted} norms.} It is checked if there are some permitted norms registered which action correspond with the requested service. In that case, it is also checked if those norms are fulfilled, that is, their target and activations are satisfied whereas their expiration are not. In case a permitted norm is satisfied, the service is provided with no restrictions and  no structural norm related with unit types or role properties are considered. Concretely, the properties of the roles (accessibility, visibility, position) are not taking into account in the execution of the services (such as informative services).
 
-\item \textit{\textsc{Forbidden} norms.}  It is checked if there are some forbidden norms registered which action correspond with the requested service. In that case, it is also checked if those norms are fulfilled, that is, their target and activations are satisfied whereas their expiration are not. If a forbidden norm is satisfied, the service is not provided , the applicant is informed and no more checkings are made. 
+\item \textit{\textsc{Forbidden} norms.}  It is checked if there are some forbidden norms registered which action correspond with the requested service. In that case, it is also checked if those norms are fulfilled, that is, their target and activations are satisfied whereas their expiration are not. If a forbidden norm is satisfied, the service is not provided, the applicant is informed and no more checkings are made. 
 
 \item \textit{Structural norms.} All predefined norms of the service are checked before provide the service. If no one is satisfied, the service is provided as usual.
 
@@ -297,7 +297,7 @@ The OMS agent is the responsible of verify if some norm applies before provide a
 \label{fig:normExample}
 \end{figure}
 
-In this section,  an example of how to use the normative context provided by \textsc{Thomas} is explained. Concretely,  the Figure \ref{fig:normExample} shows the scenario, where there are three units:  an organization named \textit{forum} (which type is \textit{hierarchy}) and its two descendent organizations \textit{fraternity} (which type is \textit{team}) and \textit{panel} (which type is \textit{flat}). Furthermore, there is the \textit{virtual} unit, which represents the \textsc{Thomas} world  and acts as the starting point to enter in the system, as mentioned before (see section \label{sec:unitsinthomas}). In the \textit{forum} unit there are the following roles:
+In this section,  an example of how to use the normative context provided by \textsc{Thomas} is explained. Concretely,  the Figure \ref{fig:normExample} shows the scenario, where there are three units:  an organization named \textit{forum} (which type is \textit{hierarchy}) and its two descendent organizations \textit{fraternity} (which type is \textit{team}) and \textit{panel} (which type is \textit{flat}). Furthermore, there is the \textit{virtual} unit, which represents the \textsc{Thomas} world  and acts as the starting point to enter in the system, as mentioned before (see section \ref{sec:unitsinthomas}). In the \textit{forum} unit there are the following roles:
 \begin{itemize}
 \item \textit{moderator}: it acts as supervisor and moderator of the forum. Its role attributes are: position=supervisor; accessibility=internal; visibility=private.
 \item participant: it participates in the forum.  Its role attributes are: position=subordinate; accessibility=internal; visibility=public.
@@ -312,18 +312,18 @@ The \textit{fraternity} unit has two roles:
 
 The \textit{panel} unit has three different roles:
 \begin{enumerate}
-\item \textit{moderator}: it should be played by an unique agent which also plays the role \textit{moderator} in the \textit{forum} unit. It is in charge of add new norms to the unit. It can not add new roles. Its role attributes are: position=creator; accessibility=internal; visibility=private.
+\item \textit{moderator}: it should be played by an unique agent which also plays the role \textit{moderator} in the \textit{forum} unit. It is in charge of adding new norms to the unit. It can not add new roles. Its role attributes are: position=creator; accessibility=internal; visibility=private.
 \item \textit{reporter}: it should be played by agents which add news to the panel. They are not allowed to add norms/roles in the unit. Its role attributes are: position=member; accessibility=external; visibility=private.
 \item \textit{follower}: it should be played by agents which read news from the panel.  They are not allowed to add norms/roles in the unit. Its role attributes are: position=member; accessibility=external; visibility=public.
 \end{enumerate}
 
-Regarding the \textit{forum} unit, it is not allowed create new roles with  position \textit{creator}.  Respecting the fraternity unit, it is prohibit to create new roles with position \textit{creator}. Concerning   the \textit{panel} organization, it is prohibit that agents known which roles are played by other agents. Also,  changing the parent unit of the organizations is prohibit.   
+Regarding the \textit{forum} unit, it is not allowed creating new roles with position \textit{creator}.  Respecting the fraternity unit, it is prohibit  creating new roles with position \textit{creator}. Concerning   the \textit{panel} organization, it is prohibit that agents known which roles are played by other agents. Also,  changing the parent unit of the organizations is prohibit.   
 
-Following,  some of the norms needed to obey the specification of the forum scenario are described using the \textsc{Thomas} syntax (see appendix \ref{app:BNFSyntax}, section sec:forumpredicates in order to known for the predicates  the OMS uses for reasoning):
+Following,  some of the norms needed to obey the specification of the forum scenario are described using the \textsc{Thomas} syntax (see appendix \ref{app:BNFSyntax}, section \ref{sec:forumpredicates} in order to known for the predicates  the OMS uses for reasoning):
 \begin{itemize}
 \item \textbf{Unit \textit{forum}}
 \begin{itemize}
-\item It is not allowed to register new roles with the position \textit{creator}:
+\item It is not allowed registering new roles with the position \textit{creator}:
 \begin{verbatim}
 @noRegRole[ f, <positionName:supervisor>, 
 registerRole(_,forum, _, _, creator,_), _ , _ ] 
@@ -370,9 +370,9 @@ registerRole(_,fraternity, _, _, _,_), _ , _ ]
  deregisterRole(_,fraternity, _), _ , _ ] 
 \end{verbatim}
 
-\item It is not allowed to register new roles with the position \textit{creator}:
+\item It is not allowed registering new roles with the position \textit{creator}:
 \begin{verbatim}
-@noRegRole[ f, <agentName:_>, 
+@noRegRoleCreator[ f, <agentName:_>, 
 registerRole(_,fraternity, _, _, creator,_), _ , _ ] 
 \end{verbatim}
 
@@ -441,10 +441,11 @@ hasAction(NormX,panel, deregisterRole), _ ]
 
 \item Knowing which roles are played by other agents is prohibit
 \begin{verbatim}
-@noSupInfAgRole[ f, <agentName:Ag>, informAgentRole(Ag,_), _ , _ ] 
+@noSupInfAgRole[ f, <agentName:Ag>,
+informAgentRole(Ag,_), _ , _ ] 
 
 @noDeRegNormnoSupInfAgRole[ f, <roleName:moderator>,
- deregisterNorm(NormX, panel, _),
+deregisterNorm(NormX, panel, _),
 hasAction(NormX,panel, informAgentRole), _ ] 
 
 \end{verbatim}
@@ -1425,3 +1426,4 @@ the user has to execute the Start-OrganizationalExample.sh script with administr
 cd Magentix2/examples/bin/
 sudo sh Start-OrganizationalExample.sh
 \end{lstlisting}
+ 
