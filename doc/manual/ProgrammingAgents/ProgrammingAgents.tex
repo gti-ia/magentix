@@ -1,4 +1,5 @@
-\chapter{Programming Agents} \label{chap:programmingAgents}
+%\chapter{Programming Agents} \label{chap:programmingAgents}
+\chapter{Basic Programming} \label{chap:programmingAgents}
 %MUY IMPORTANTE. Esta parte est� destinada al programador de agentes que no tiene inter�s alguno acerca de c�mo poner la plataforma en marcha y mucho menos sobre c�mo est�n implementadas las cosas por dentro. En cada secci�n referencias con una breve descripci�n qu� ejemplos est�n disponibles.
 %
 
@@ -374,54 +375,54 @@ send(msg);
 %==================================================================
 %================== CUARTA SECCI�N ================================
 %==================================================================
-%%\section{Basic conversational agents: QueueAgents}
+\section{Basic conversational agents: QueueAgents}
 
 
 
-%%\subsection{Running QueueAgents}
-%%Once defined the protocol, we have to create a new instance and add it to the agent tasks (method addTask). In the initiator role, it is necessay to create and fill in the appropriate message for the desired protocol.
+\subsection{Running QueueAgents}
+First, it is needed to define a protocol. Secondly,  we have to create a new instance of this protocol and add it to the agent tasks (method addTask). In the initiator role, it is necessary to create and fill in the appropriate message for the desired protocol.
 
-%%For example,  for the protocol request:
-%%\begin{lstlisting}
-%%	ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-%%	msg.setReceiver(new AgentID("HospitalAgent"));
-%%	msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
-%%	msg.setContent("accident to " + "10" + " km");
-%%	msg.setSender(this.getAid());
+For example,  for the protocol request:
+\begin{lstlisting}
+	ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+	msg.setReceiver(new AgentID("HospitalAgent"));
+	msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
+	msg.setContent("accident to " + "10" + " km");
+	msg.setSender(this.getAid());
 
-%%	this.addTask(new FIPARequestInitiator(this,msg));
+	this.addTask(new FIPARequestInitiator(this,msg));
+\end{lstlisting}
+For the responder, it is needed to create a template with the desired protocol:
+\begin{lstlisting}
+	MessageTemplate template = new MessageTemplate(
+				InteractionProtocol.FIPA_REQUEST);
+
+	this.addTask(new FIPARequestResponder(this,template));
+\end{lstlisting}
+When a task is added , a new thread is created for the agent. Therefore, it is necessary to be careful which the main thread of the agent is not finished. For instance,  a monitor can be used to wait for the completion of the roles:
+\begin{lstlisting}
+	import es.upv.dsic.gti_ia.architecture.Monitor;
+
+	private Monitor monitor = new Monitor();
+
+	protected void execute() {
+				.
+				.
+				.
+		this.addTask(new FIPARequestInitiator(this, msg));
+		monitor.waiting();
+	}
 %%\end{lstlisting}
-%%For the responder, it is needed to create a template with the desired protocol:
-%%\begin{lstlisting}
-%%	MessageTemplate template = new MessageTemplate(
-%%				InteractionProtocol.FIPA_REQUEST);
-%%
-%%	this.addTask(new FIPARequestResponder(this,template));
-%%\end{lstlisting}
-%%When a task is added , a new thread is created for the agent. Therefore, it is necessary to be careful which the main thread of the agent is not finished. For instance,  a monitor can be used to wait for the completion of the roles:
-%%\begin{lstlisting}
-%%	import es.upv.dsic.gti_ia.architecture.Monitor;
 
-%%	private Monitor monitor = new Monitor();
+\subsection{Examples}
 
-%%	protected void execute() {
-%%				.
-%%				.
-%%				.
-%%		this.addTask(new FIPARequestInitiator(this, msg));
-%%		monitor.waiting();
-%%	}
-%%\end{lstlisting}
+In the examples folder of the Magentix2 packages there are some basic interaction protocols examples:
+\begin{itemize}
 
-%%\subsection{Examples}
+\item \textbf{Request:} this example follows the FIPA Request protocol. In this example two agents are created. One agent plays the responding role by simulating a hospital which listens emergency calls. The other agent simulates an accident witness. When the witness see an accident sends a help message to the hospital. The hospital checks if the accident is placed in the action area and if it could attend it.
 
-%%In the examples folder of the Magentix2 packages there are some basic interaction protocols examples:
-%%\begin{itemize}
-
-%%\item \textbf{Request:} this example follows the FIPA Request protocol. In this example two agents are created. One agent plays the responding role by simulating a hospital which listens emergency calls. The other agent simulates an accident witness. When the witness see an accident sends a help message to the hospital. The hospital checks if the accident is placed in the action area and if it could attend it.
-
-%%\item \textbf{ContractNet:} this is an example where the FIPA ContractNet protocol is followed. In this example, two types of agents are created. One type of agents plays the responding role (dealers). The other type, a single agent, plays the initiator role (buyer). The buyer sends a purchase request to each dealer agent. Each dealer agent answers the bid according her preferences and waits for the buyer decision. The buyer chooses one offer and informs the specific dealer and also sends a reject message to the rest of the dealers.
-%%\end{itemize}
+\item \textbf{ContractNet:} this is an example where the FIPA ContractNet protocol is followed. In this example, two types of agents are created. One type of agents plays the responding role (dealers). The other type, a single agent, plays the initiator role (buyer). The buyer sends a purchase request to each dealer agent. Each dealer agent answers the bid according her preferences and waits for the buyer decision. The buyer chooses one offer and informs the specific dealer and also sends a reject message to the rest of the dealers.
+\end{itemize}
 
 %==================================================================
 %================== QUINTA SECCI�N ================================
@@ -914,7 +915,7 @@ How to use a CFactory template is shown in the previous section \ref{subsec:usin
 %==================================================================
 %================== SEXTA SECCI�N =================================
 %==================================================================
-\chapter{BDI Agents: JasonAgents}
+\chapter{BDI Agents: JasonAgents}\label{chap:JasonAgents}
 Jason\cite{bordini05} is an interpreter for an extended version of AgentSpeak(L)\cite{Rao96} and implements the operational semantics of that language. It has been developed by Jomi F. H\"ubner and Rafael H. Bordini. Jason has been integrated in Magentix2 platform, therefore we can program agents in AgentSpeak and run them on Magentix2 platform. For examples and demos of how to program in AgentSpeak(L), please refer to the webpage of the Jason project: \url{http://jason.sourceforge.net/Jason/Jason.html}.
 
 
@@ -1559,7 +1560,7 @@ The main tasks to perform to create an argumentative agent are:
 
 The Domain CBR can be used to generate and select positions to defend in the argumentation dialogue. To make a query to the domain CBR, the user has to provide a problem (codified as a list of premises or a domain-case without solution) and a threshold of similarity. The domain CBR module searches the domain case-base and returns a list of similar domain-cases to the given problem. In addition, with every request attended and every CBR cycle performed, the module adds, modifies or deletes one or more domain-cases of the domain case-base. In the current version of the API, if the problem that has been solved is similar enough (over certain similarity threshold) to a case of the domain-cases case-base, the update algorithm updates this case with the new data acquired. Otherwise, a new domain-case is created and added to the case-base.
 %Also, this CBR can be updated with the generated data during the argumentation process adding the learnt cases.
-The main methods of the Domain CBR are shown in Table \ref{tab:DomainCBRMethods} (for a detailed explanation of all Domain CBR methods, see the \lstinline{DomainCBR.java} associated JavaDoc).
+The main methods of the Domain CBR are shown in Table \ref{tab:DomainCBRMethods} (for a detailed explanation of all Domain CBR methods, see the \lstinline|DomainCBR.java| associated JavaDoc).
 \begin{table}[h!t]
 \begin{tabular}{|l|l|p{6cm}|}
 \hline
