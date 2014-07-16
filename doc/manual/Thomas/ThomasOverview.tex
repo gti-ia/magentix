@@ -485,7 +485,7 @@ joinUnit(panel,_,_), _ , _ ]
 \subsection{Magentix2 API for \textsc{Thomas}}\label{thomasAPI}
 SF and OMS have been defined as two types of intermediary agents in order to address the translation between Magentix2 agents (or any external agent), that implement FIPA communication,and the services they provide. Services requests through FIPA-request protocol were received by this type of agents.
 
-In order to ease the interaction among user agents and OMS and SF agents, two classes are provided (\lstinline|OMSProxy| and \lstinline|SFProxy|). They work as a proxy for OMS and SF respectively, encapsulating and hiding the details of the underlying communication protocol. By doing this, the developer can interact with OMS and SF using simple function calls.
+In order to ease the interaction among user agents and OMS and SF agents, two classes are provided (\lstinline|OMSProxy| and \lstinline|SFProxy|). They work as a proxy for OMS and SF respectively, encapsulating and hiding the details of the underlying communication protocol.Thus, the developer can interact with OMS and SF using simple function calls \footnote{Notice that only Queue and Conversational Agents can make use of these proxy classes, because  the capacity of follow a conversation is required} .
 
 \subsubsection{OMSProxy}
 
