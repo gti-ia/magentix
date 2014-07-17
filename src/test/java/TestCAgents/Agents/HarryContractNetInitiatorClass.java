@@ -11,11 +11,19 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
+
+/**
+ * Initiator factory class for the test ContractNet protocol
+ * 
+ * @author Javier Jorge - jjorge@dsic.upv.es
+ */
+
 public class HarryContractNetInitiatorClass extends CAgent {
 
 	// Variables for testing
 	public String informMsg;
 	private CountDownLatch finished;
+	private CountDownLatch ready;
 	public String acceptMsg;
 	public String refuseMsg;
 	private int mode;
@@ -23,6 +31,11 @@ public class HarryContractNetInitiatorClass extends CAgent {
 	public String receiveFailure;
 	public String notUnderstood;
 	public String timeOutMsg;
+	
+	public final int ACCEPT = 0;
+	public final int REJECT = 1;
+	public final int REFUSE = 1;
+	public final int PASS = 2;
 
 	/**
 	 * @return the timeOutMsg
@@ -39,10 +52,11 @@ public class HarryContractNetInitiatorClass extends CAgent {
 		this.timeOutMsg = timeOutMsg;
 	}
 
-	public HarryContractNetInitiatorClass(AgentID aid, CountDownLatch finished)
+	public HarryContractNetInitiatorClass(AgentID aid, CountDownLatch finished, CountDownLatch ready)
 			throws Exception {
 		super(aid);
 		this.finished = finished;
+		this.ready = ready;
 		informMsg = "";
 	}
 
@@ -160,10 +174,10 @@ public class HarryContractNetInitiatorClass extends CAgent {
 				if (proposes.size() != 0) {
 
 					if (((HarryContractNetInitiatorClass) myProcessor
-							.getMyAgent()).getMode() != 2) {
+							.getMyAgent()).getMode() != PASS) {
 
 						if (((HarryContractNetInitiatorClass) myProcessor
-								.getMyAgent()).getMode() == 0) {
+								.getMyAgent()).getMode() == ACCEPT) {
 							
 							ACLMessage messageToSend = new ACLMessage(
 									ACLMessage.ACCEPT_PROPOSAL);
@@ -224,6 +238,15 @@ public class HarryContractNetInitiatorClass extends CAgent {
 				"CONTRACTNET", filter, template, availableConversations,
 				myProcessor.getMyAgent(), participants, deadline, timeout);
 		this.addFactoryAsInitiator(contractnet);
+		
+		ready.countDown();
+		try {
+			ready.await();
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
+		
 
 		this.startSyncConversation("CONTRACTNET");
 
@@ -232,6 +255,7 @@ public class HarryContractNetInitiatorClass extends CAgent {
 
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
+		
 		finished.countDown();
 	}
 

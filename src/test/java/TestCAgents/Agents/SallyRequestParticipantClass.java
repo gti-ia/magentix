@@ -16,11 +16,13 @@ public class SallyRequestParticipantClass extends CAgent {
 	// Variables for testing
 	public boolean acceptRequests;
 	private CountDownLatch finished;
+	private CountDownLatch ready;
 
-	public SallyRequestParticipantClass(AgentID aid, CountDownLatch finished)
+	public SallyRequestParticipantClass(AgentID aid, CountDownLatch finished, CountDownLatch ready)
 			throws Exception {
 		super(aid);
 		this.finished = finished;
+		this.ready = ready;
 		acceptRequests = false;// False until the CFactory gets to the
 								// doReceiveRequestMethod
 	}
@@ -95,6 +97,14 @@ public class SallyRequestParticipantClass extends CAgent {
 		// Finally the factory is setup to answer to incoming messages that
 		// can start the participation of the agent in a new conversation
 		this.addFactoryAsParticipant(talk);
+		
+		ready.countDown();
+		try {
+			ready.await();
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
 
 	}
 

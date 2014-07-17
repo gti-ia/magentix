@@ -31,6 +31,8 @@ public class TestCProcessorFactories {
 	SallyClass Sally;
 	Process qpid_broker;
 	CountDownLatch finished = new CountDownLatch(2);
+	CountDownLatch ready = new CountDownLatch(2);
+	
 	Logger logger = Logger.getLogger(TestCProcessorFactories.class);
 
 	@Before
@@ -53,8 +55,8 @@ public class TestCProcessorFactories {
 			/**
 			 * Instantiating the CAgents
 			 */
-			Harry = new HarryClass(new AgentID("Harry"), finished);
-			Sally = new SallyClass(new AgentID("Sally"), finished);
+			Harry = new HarryClass(new AgentID("Harry"), finished, ready);
+			Sally = new SallyClass(new AgentID("Sally"), finished, ready);
 
 		} catch (Exception e) {
 			e.printStackTrace();

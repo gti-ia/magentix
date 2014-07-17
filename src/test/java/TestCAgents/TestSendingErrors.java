@@ -33,6 +33,7 @@ public class TestSendingErrors {
 	SallyClass Sally;
 
 	CountDownLatch finished;
+	CountDownLatch ready = new CountDownLatch(1);
 
 	Logger logger = Logger.getLogger(TestSendingErrors.class);
 
@@ -113,7 +114,7 @@ public class TestSendingErrors {
 			 */
 			AgentsConnection.connect();
 
-			Sally = new SallyClass(new AgentID("Sally"), finished);
+			Sally = new SallyClass(new AgentID("Sally"), finished, ready);
 
 		} catch (Exception e) {
 			e.printStackTrace();

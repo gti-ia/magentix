@@ -21,10 +21,12 @@ public class SallyClass extends CAgent {
 	public String receivedMsg;
 	public boolean notAcceptedMessageState;
 	private CountDownLatch finished;
+	private CountDownLatch ready;
 
-	public SallyClass(AgentID aid, CountDownLatch finished) throws Exception {
+	public SallyClass(AgentID aid, CountDownLatch finished, CountDownLatch ready) throws Exception {
 		super(aid);
 		this.finished = finished;
+		this.ready = ready;
 		receivedMsg = "";
 	}
 
@@ -123,6 +125,14 @@ public class SallyClass extends CAgent {
 		// with the performative set to PURPOSE will make the factory
 		// TALK to create a processor in order to manage the conversation.
 		this.addFactoryAsParticipant(talk);
+		
+		ready.countDown();
+		try {
+			ready.await();
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
 
 	}
 

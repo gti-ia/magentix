@@ -1,5 +1,7 @@
 package TestCAgents.Agents;
 
+import java.util.concurrent.CountDownLatch;
+
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
@@ -17,10 +19,11 @@ public class OtherParticipantClass extends CAgent {
 	public String receivedMsg;
 	public boolean notAcceptedMessageState;
 	public int mode;
+	private CountDownLatch ready;
 
-	public OtherParticipantClass(AgentID aid) throws Exception {
+	public OtherParticipantClass(AgentID aid, CountDownLatch ready) throws Exception {
 		super(aid);
-
+		this.ready = ready;
 		receivedMsg = "";
 	}
 
@@ -142,6 +145,14 @@ public class OtherParticipantClass extends CAgent {
 		talk.cProcessorTemplate().addTransition("AGREE", "FINAL");
 
 		this.addFactoryAsParticipant(talk);
+		
+		ready.countDown();
+		try {
+			ready.await();
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
 
 	}
 

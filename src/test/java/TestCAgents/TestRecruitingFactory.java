@@ -34,6 +34,8 @@ public class TestRecruitingFactory {
 	Condition HarryFinished = mutex.newCondition();
 	Condition SallyFinished = mutex.newCondition();
 	CountDownLatch finished = new CountDownLatch(2);
+	CountDownLatch ready = new CountDownLatch(3);
+
 	Logger logger = Logger.getLogger(TestRecruitingFactory.class);
 
 	public final int AGREE = 0;
@@ -65,10 +67,10 @@ public class TestRecruitingFactory {
 			 * Instantiating the CAgents
 			 */
 			Harry = new HarryRecruitingInitiatorClass(new AgentID("Harry"),
-					finished);
+					finished, ready);
 			Sally = new SallyRecruitingParticipantClass(new AgentID("Sally"),
-					finished);
-			theOther = new OtherParticipantClass(new AgentID("other"));
+					finished, ready);
+			theOther = new OtherParticipantClass(new AgentID("other"), ready);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -100,6 +102,7 @@ public class TestRecruitingFactory {
 
 	@Test(timeout = 30000)
 	public void testAgreeAndFailure() {
+
 		Sally.start();
 		Sally.setMode(AGREE);
 		Sally.setModeLocate(LOCATE);
@@ -119,8 +122,19 @@ public class TestRecruitingFactory {
 		assertEquals("SubProtocol failed :(", Sally.informMsg);
 	}
 
-	@Test(timeout = 30000)
+	@Test(timeout = 60000)
 	public void testRefuse() {
+
+		ready = new CountDownLatch(2);
+		finished = new CountDownLatch(2);
+		
+		Sally.setFinished(finished);
+		Harry.setFinished(finished);
+		
+		Sally.setReady(ready);
+		Harry.setReady(ready);
+		
+
 		Sally.start();
 		Sally.setMode(REFUSE);
 		Sally.setModeLocate(LOCATE);

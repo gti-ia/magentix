@@ -17,10 +17,13 @@ public class SallyContractNetParticipantClass extends CAgent {
 	public final int PROPOSE = 0;
 	public final int REFUSE = 1;
 	public int mode = PROPOSE;
+	
+	
 
 	public String proposal;
 	public String informMsg;
 	private CountDownLatch finished;
+	private CountDownLatch ready;
 	public String refuseMsg;
 	public String rejectMsg;
 	public boolean FAIL = false;
@@ -29,10 +32,11 @@ public class SallyContractNetParticipantClass extends CAgent {
 	public String acceptMsg;
 	public String timeOutMsg;
 
-	public SallyContractNetParticipantClass(AgentID aid, CountDownLatch finished)
+	public SallyContractNetParticipantClass(AgentID aid, CountDownLatch finished, CountDownLatch ready)
 			throws Exception {
 		super(aid);
 		this.finished = finished;
+		this.ready = ready;
 		acceptRequests = false;
 	}
 
@@ -135,6 +139,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 			 */
 			protected void doFinal(CProcessor myProcessor,
 					ACLMessage messageToSend) {
+				System.out.println("SALIENDO....");
 				messageToSend = myProcessor.getLastSentMessage();
 				myProcessor.getMyAgent().Shutdown();
 			}
@@ -144,6 +149,7 @@ public class SallyContractNetParticipantClass extends CAgent {
 					ACLMessage msg) {
 				logger.info("ME LLEGA UNA PETICION");
 				proposal = msg.getContent();
+				
 				if (mode == PROPOSE) {
 					return "SEND_PROPOSAL";
 				} else {
@@ -176,18 +182,15 @@ public class SallyContractNetParticipantClass extends CAgent {
 
 				}
 
-				boolean failure = FAIL;
-				boolean done = true;
-
-				if (failure) {
+				if (FAIL) {
 					logger.info("Error");
 					receiveFailure = "Error";
 					return "SEND_FAILURE";
-				} else if (done) {
+				} else{
 					return "SEND_INFORM";
-				} else {
-					return "SEND_INFORM"; //
 				}
+					
+				
 			}
 
 			@Override
@@ -215,11 +218,21 @@ public class SallyContractNetParticipantClass extends CAgent {
 				myProcessor.getMyAgent(), timeout);
 
 		this.addFactoryAsParticipant(contractnet);
+		
+		ready.countDown();
+		try {
+			ready.await();
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
+		
 
 	}
 
 	protected void finalize(CProcessor firstProcessor,
 			ACLMessage finalizeMessage) {
+		
 		finished.countDown();
 	}
 }

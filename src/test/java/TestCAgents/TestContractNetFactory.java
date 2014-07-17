@@ -32,7 +32,11 @@ public class TestContractNetFactory {
 	SallyContractNetParticipantClass Sally2;
 	SallyContractNetParticipantClass Sally3;
 	Process qpid_broker;
+	
+	
 	CountDownLatch finished = new CountDownLatch(2);
+	CountDownLatch ready = new CountDownLatch(2);
+	
 	public final int ACCEPT = 0;
 	public final int REJECT = 1;
 	public final int REFUSE = 1;
@@ -43,7 +47,8 @@ public class TestContractNetFactory {
 
 		qpid_broker = qpidManager.UnixQpidManager.startQpid(
 				Runtime.getRuntime(), qpid_broker);
-
+		
+		
 		try {
 
 			/**
@@ -60,9 +65,9 @@ public class TestContractNetFactory {
 			 * Instantiating the CAgents
 			 */
 			Harry = new HarryContractNetInitiatorClass(new AgentID("Harry"),
-					finished);
+					finished, ready);
 			Sally = new SallyContractNetParticipantClass(new AgentID("Sally"),
-					finished);
+					finished, ready);
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -74,20 +79,22 @@ public class TestContractNetFactory {
 	public void testProtocolMultipleAgents() {
 
 		finished = new CountDownLatch(4);
+		ready = new CountDownLatch(4);
+		
 		HarryContractNetMultipletInitiatorClass HarryM = null;
 		try {
 
 			HarryM = new HarryContractNetMultipletInitiatorClass(new AgentID(
-					"HarryM"), finished);
+					"HarryM"), finished, ready);
 
 			Sally = new SallyContractNetParticipantClass(new AgentID("Sally1"),
-					finished);
+					finished, ready);
 
 			Sally2 = new SallyContractNetParticipantClass(
-					new AgentID("Sally2"), finished);
+					new AgentID("Sally2"), finished, ready);
 
 			Sally3 = new SallyContractNetParticipantClass(
-					new AgentID("Sally3"), finished);
+					new AgentID("Sally3"), finished, ready);
 
 		} catch (Exception e1) {
 			fail("Exception with multiple agents");
@@ -113,27 +120,28 @@ public class TestContractNetFactory {
 		assertEquals("refuse", Sally2.refuseMsg);
 		assertEquals("COMPLETE", HarryM.informMsg);
 		assertEquals("COMPLETE", Sally3.informMsg);
-		finished = new CountDownLatch(2);
+		
 	}
 
 	@Test(timeout = 30000)
 	public void testProtocolMultipleAgentsRefuse() {
 
 		finished = new CountDownLatch(4);
+		ready = new CountDownLatch(4);
 		HarryContractNetMultipletInitiatorClass HarryM = null;
 		try {
 
 			HarryM = new HarryContractNetMultipletInitiatorClass(new AgentID(
-					"HarryM"), finished);
+					"HarryM"), finished, ready);
 
 			Sally = new SallyContractNetParticipantClass(new AgentID("Sally1"),
-					finished);
+					finished, ready);
 
 			Sally2 = new SallyContractNetParticipantClass(
-					new AgentID("Sally2"), finished);
+					new AgentID("Sally2"), finished, ready);
 
 			Sally3 = new SallyContractNetParticipantClass(
-					new AgentID("Sally3"), finished);
+					new AgentID("Sally3"), finished, ready);
 
 		} catch (Exception e1) {
 			fail("Exception with multiple agents");
@@ -161,27 +169,29 @@ public class TestContractNetFactory {
 		assertEquals("refuse", Sally3.refuseMsg);
 		assertEquals("May you give me your phone number?", HarryM.refuseMsg);
 
-		finished = new CountDownLatch(2);
+		
 	}
 
 	@Test(timeout = 30000)
 	public void testProtocolMultipleAgentsAccept() {
 
 		finished = new CountDownLatch(4);
+		ready = new CountDownLatch(4);
+		
 		HarryContractNetMultipletInitiatorClass HarryM = null;
 		try {
 
 			HarryM = new HarryContractNetMultipletInitiatorClass(new AgentID(
-					"HarryM"), finished);
+					"HarryM"), finished, ready);
 
 			Sally = new SallyContractNetParticipantClass(new AgentID("Sally1"),
-					finished);
+					finished, ready);
 
 			Sally2 = new SallyContractNetParticipantClass(
-					new AgentID("Sally2"), finished);
+					new AgentID("Sally2"), finished, ready);
 
 			Sally3 = new SallyContractNetParticipantClass(
-					new AgentID("Sally3"), finished);
+					new AgentID("Sally3"), finished, ready);
 
 		} catch (Exception e1) {
 			fail("Exception with multiple agents");
@@ -199,16 +209,21 @@ public class TestContractNetFactory {
 
 			e.printStackTrace();
 		}
+		
 		assertEquals("COMPLETE", Sally.informMsg);
 		assertEquals("COMPLETE", Sally2.informMsg);
 		assertEquals("COMPLETE", Sally3.informMsg);
 		assertEquals("COMPLETE", HarryM.informMsg);
 
-		finished = new CountDownLatch(2);
+		
 	}
+	
+	
 
 	@Test(timeout = 30000)
 	public void testProtocol() {
+		
+		
 		Sally.start();
 		Harry.start();
 
@@ -225,7 +240,7 @@ public class TestContractNetFactory {
 
 	@Test(timeout = 30000)
 	public void testProtocolRefuseProposal() {
-
+		
 		Sally.setMode(REFUSE); // REFUSE MODE
 		Sally.start();
 		Harry.start();
@@ -242,7 +257,8 @@ public class TestContractNetFactory {
 
 	@Test(timeout = 30000)
 	public void testProtocolRejectProposal() {
-
+		
+	
 		Sally.start();
 		Harry.setMode(REFUSE);
 		Harry.start();
@@ -259,7 +275,8 @@ public class TestContractNetFactory {
 
 	@Test(timeout = 30000)
 	public void testProtocolAcceptProposal() {
-
+		
+	
 		Sally.start();
 
 		Harry.setMode(ACCEPT);
@@ -278,6 +295,8 @@ public class TestContractNetFactory {
 
 	@Test(timeout = 30000)
 	public void testNotUnderstood() {
+		
+			
 		Sally.start();
 		Sally.FAIL = true;
 
@@ -297,7 +316,7 @@ public class TestContractNetFactory {
 
 	@Test(timeout = 30000)
 	public void testProtocolRcvFailure() {
-
+		
 		Sally.start();
 
 		Sally.FAIL = true;
@@ -314,9 +333,9 @@ public class TestContractNetFactory {
 		assertEquals("Error", Sally.receiveFailure);
 	}
 
-	@Test(timeout = 30000)
+	@Test(timeout = 60000)
 	public void testProtocolTimeOutParticipantII() {
-
+		
 		Sally.start();
 
 		Sally.FAIL = true;
@@ -331,31 +350,12 @@ public class TestContractNetFactory {
 
 			e.printStackTrace();
 		}
+		
+		
 		assertEquals("mmmm...no", Harry.timeOutMsg);
 		assertEquals("INFORM", Sally.timeOutMsg);
 
 	}
-
-	// REVISAR, TIMEOUT INICIAL?
-	// @Test(timeout = 30000)
-	// public void testProtocolTimeOutParticipantI() {
-	//
-	// finished = new CountDownLatch(1);
-	//
-	// Sally.start();
-	//
-	// try {
-	// finished.await();
-	// } catch (InterruptedException e) {
-	//
-	// e.printStackTrace();
-	// }
-	// assertEquals("mmmm...no", Harry.timeOutMsg);
-	// assertEquals("INFORM", Sally.timeOutMsg);
-	//
-	// finished = new CountDownLatch(2);
-	//
-	// }
 
 	@After
 	public void tearDown() throws Exception {

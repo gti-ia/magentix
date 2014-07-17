@@ -158,7 +158,7 @@ public class HarrySignalTestClass extends CAgent {
 		try {
 			ready.await();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		// Finally Harry starts the conversation.

@@ -20,12 +20,19 @@ import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_RECRUITING_Initiator;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
 
+/**
+ * Initiator factory class for the test Recruiting
+ * 
+ * @author Javier Jorge - jjorge@dsic.upv.es
+ */
+
 public class HarryRecruitingInitiatorClass extends CAgent {
 
 	// Variables for testing
 	public String informMsg;
 	public String refuseMsg;
 	private CountDownLatch finished;
+	private CountDownLatch ready;
 	public String agreeMsg;
 	public String receivedMsgFromProxy;
 	public String failureNoMatchMsg;
@@ -62,10 +69,12 @@ public class HarryRecruitingInitiatorClass extends CAgent {
 
 	public String failureProxyMsg;
 
-	public HarryRecruitingInitiatorClass(AgentID aid, CountDownLatch finished)
+	public HarryRecruitingInitiatorClass(AgentID aid, CountDownLatch finished, CountDownLatch ready)
 			throws Exception {
 		super(aid);
+		
 		this.finished = finished;
+		this.ready = ready;
 		informMsg = "";
 	}
 
@@ -191,6 +200,14 @@ public class HarryRecruitingInitiatorClass extends CAgent {
 				null, msg, 1, this, 0);
 
 		this.addFactoryAsInitiator(recruiting);
+		
+		ready.countDown();
+		try {
+			ready.await();
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
 
 		this.startSyncConversation("RECRUITING");
 
@@ -200,4 +217,34 @@ public class HarryRecruitingInitiatorClass extends CAgent {
 			ACLMessage finalizeMessage) {
 		finished.countDown();
 	}
+	
+
+	/**
+	 * @return the finished
+	 */
+	public CountDownLatch getFinished() {
+		return finished;
+	}
+
+	/**
+	 * @param finished the finished to set
+	 */
+	public void setFinished(CountDownLatch finished) {
+		this.finished = finished;
+	}
+
+	/**
+	 * @return the ready
+	 */
+	public CountDownLatch getReady() {
+		return ready;
+	}
+
+	/**
+	 * @param ready the ready to set
+	 */
+	public void setReady(CountDownLatch ready) {
+		this.ready = ready;
+	}
+
 }

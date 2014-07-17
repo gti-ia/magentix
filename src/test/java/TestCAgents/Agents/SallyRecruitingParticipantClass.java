@@ -29,6 +29,7 @@ public class SallyRecruitingParticipantClass extends CAgent {
 	public String refuseMsg;
 	private int mode;
 	private CountDownLatch finished;
+	private CountDownLatch ready;
 	public String agreeMsg;
 	private String receivedMsgFromOther;
 	public boolean resultOfSubprotocol;
@@ -36,41 +37,21 @@ public class SallyRecruitingParticipantClass extends CAgent {
 	public String informMsg;
 	public String failureMsg;
 	public String failureNoMatchMsg;
+	
+	public final int AGREE_MODE = 0;
+	public final int REFUSE_MODE = 1;
+	public final int LOCATE_MODE = 0;
+	public final int NO_LOCATE_MODE = 1;
+	public final int SUCCESS_MODE = 0;
+	public final int FAILURE_MODE = 1;
 
-	/**
-	 * @return the modeLocate
-	 */
-	public int getModeLocate() {
-		return modeLocate;
-	}
 
-	/**
-	 * @param modeLocate
-	 *            the modeLocate to set
-	 */
-	public void setModeLocate(int modeLocate) {
-		this.modeLocate = modeLocate;
-	}
 
-	/**
-	 * @return the failureMsg
-	 */
-	public String getFailureMsg() {
-		return failureMsg;
-	}
-
-	/**
-	 * @param failureMsg
-	 *            the failureMsg to set
-	 */
-	public void setFailureMsg(String failureMsg) {
-		this.failureMsg = failureMsg;
-	}
-
-	public SallyRecruitingParticipantClass(AgentID aid, CountDownLatch finished)
+	public SallyRecruitingParticipantClass(AgentID aid, CountDownLatch finished, CountDownLatch ready)
 			throws Exception {
 		super(aid);
 		this.finished = finished;
+		this.ready = ready;
 		acceptRequests = false;// False until the CFactory gets to the
 								// doReceiveRequestMethod
 	}
@@ -202,7 +183,9 @@ public class SallyRecruitingParticipantClass extends CAgent {
 			@Override
 			protected String doReceiveProxy(CProcessor myProcessor,
 					ACLMessage msg) {
-				if (mode == 0) {// Agree mode
+			
+				
+				if (mode == AGREE_MODE) {// Agree mode
 
 					return "AGREE";
 				} else {
@@ -218,7 +201,7 @@ public class SallyRecruitingParticipantClass extends CAgent {
 			protected ArrayList<AgentID> doLocateAgents(CProcessor myProcessor,
 					ACLMessage proxyMessage) {
 				ArrayList<AgentID> al = new ArrayList<AgentID>();
-				if (modeLocate == 0) {// Locate
+				if (modeLocate == LOCATE_MODE) {// Locate
 
 					al.add(new AgentID("other"));
 				}
@@ -348,6 +331,14 @@ public class SallyRecruitingParticipantClass extends CAgent {
 		// a initiator one
 
 		this.addFactoryAsInitiator(talk);
+		
+		ready.countDown();
+		try {
+			ready.await();
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
 
 	}
 
@@ -414,5 +405,64 @@ public class SallyRecruitingParticipantClass extends CAgent {
 	 */
 	public void setMode(int mode) {
 		this.mode = mode;
+	}
+	
+
+	/**
+	 * @return the modeLocate
+	 */
+	public int getModeLocate() {
+		return modeLocate;
+	}
+
+	/**
+	 * @param modeLocate
+	 *            the modeLocate to set
+	 */
+	public void setModeLocate(int modeLocate) {
+		this.modeLocate = modeLocate;
+	}
+
+	/**
+	 * @return the failureMsg
+	 */
+	public String getFailureMsg() {
+		return failureMsg;
+	}
+
+	/**
+	 * @param failureMsg
+	 *            the failureMsg to set
+	 */
+	public void setFailureMsg(String failureMsg) {
+		this.failureMsg = failureMsg;
+	}
+
+	/**
+	 * @return the finished
+	 */
+	public CountDownLatch getFinished() {
+		return finished;
+	}
+
+	/**
+	 * @param finished the finished to set
+	 */
+	public void setFinished(CountDownLatch finished) {
+		this.finished = finished;
+	}
+
+	/**
+	 * @return the ready
+	 */
+	public CountDownLatch getReady() {
+		return ready;
+	}
+
+	/**
+	 * @param ready the ready to set
+	 */
+	public void setReady(CountDownLatch ready) {
+		this.ready = ready;
 	}
 }

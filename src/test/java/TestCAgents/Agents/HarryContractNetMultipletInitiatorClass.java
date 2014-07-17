@@ -11,6 +11,11 @@ import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
 
+/**
+ * Initiator factory class for the test ContractNet protocol (n agents)
+ * 
+ * @author Javier Jorge - jjorge@dsic.upv.es
+ */
 public class HarryContractNetMultipletInitiatorClass extends CAgent {
 
 	// Variables for testing
@@ -23,11 +28,13 @@ public class HarryContractNetMultipletInitiatorClass extends CAgent {
 	public String receiveFailure;
 	public String notUnderstood;
 	public int received = 0;
+	public CountDownLatch ready;
 
 	public HarryContractNetMultipletInitiatorClass(AgentID aid,
-			CountDownLatch finished) throws Exception {
+			CountDownLatch finished, CountDownLatch ready) throws Exception {
 		super(aid);
 		this.finished = finished;
+		this.ready = ready;
 		informMsg = "";
 	}
 
@@ -210,7 +217,17 @@ public class HarryContractNetMultipletInitiatorClass extends CAgent {
 				"CONTRACTNET", filter, template, availableConversations,
 				myProcessor.getMyAgent(), participants, deadline, timeout);
 		this.addFactoryAsInitiator(contractnet);
-
+		
+		
+		
+		ready.countDown();
+		try {
+			ready.await();
+		} catch (InterruptedException e) {
+		
+			e.printStackTrace();
+		}
+		
 		this.startSyncConversation("CONTRACTNET");
 
 		myProcessor.ShutdownAgent();
