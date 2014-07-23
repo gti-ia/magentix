@@ -601,7 +601,8 @@ public class OMSInterface {
 				}
 
 			}
-			throw new THOMASException("Invalid. Empty parameters.");
+			String message = l10n.getMessage(MessageID.EMPTY_PARAMETERS);
+			throw new EmptyParametersException(message);
 		} catch (Exception e) {
 			resultXML += "<status>Error</status>\n";
 			resultXML += "<result>\n<description>" + e.getMessage() + "</description>\n</result>\n";
@@ -1479,7 +1480,7 @@ public class OMSInterface {
 	 *            Identifier of the parent unit
 	 * @param AgentName
 	 *            Identifier of the agent
-	 * @return Returns <unitName + jointed to parentName>
+	 * @return Returns <unitName + joined to parentName>
 	 */
 	public String joinUnit(String UnitName, String ParentName, String AgentName) {
 

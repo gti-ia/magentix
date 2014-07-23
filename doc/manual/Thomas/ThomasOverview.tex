@@ -21,7 +21,7 @@ In addition, Magentix2 offers a new communication mechanism based on the virtual
 	\item [Organization Manager Service (OMS)] It is mainly responsible of the management of the organizations and their entities. Thus, it allows the creation and the management of any organization and the roles the agents play.
 \end{description}
 
-\subsection{Roles in \textsc{Thomas}}
+\subsection{Roles in \textsc{Thomas}}\label{sec:ThomasRoles}
 
 Roles  in \textsc{Thomas} are defined with a \textit{RoleName} that acts as an identifier. Furthermore, each role is always associated with a particular organizational unit. Also, each role has the following attributes: $<Position, Accessibility, Visibility>$.
 
@@ -46,7 +46,7 @@ In Table \ref{tab:Role_position} a summary of the role behavior taking into acco
 \item \textbf{Visibility}. By means of this attribute it is possible to control what information about roles is provided. Concretely, the allowed values for this attribute are:
 \begin{itemize}
 \item Public: information services always provide the requested information.
-\item Private: the solicited information is provided only if the requested  agent belongs to the same organization where the role is registered.
+\item Private: the requested information is provided only if the requested  agent belongs to the same organization where the role is registered.
 \end{itemize}
 
 \end{itemize}
@@ -139,11 +139,11 @@ Allowed role  & \multicolumn{2}{|p{6cm}|}{Creator}  & Creator  \\
 positions     & \multicolumn{2}{|p{6cm}|}{Member} & Supervisor  \\
                   & \multicolumn{2}{|p{6cm}|}{}        & Subordinate     \\ \hline
 
-What agents can send organizational messages? &\multicolumn{3}{|p{11.5cm}|}{Any agent from this organization, except those who only play roles with \textit{Position = Creator}}. \\ \hline
+What agents can send organizational messages? &\multicolumn{3}{|p{11.5cm}|}{Any agent from this organization, except those who only play roles with \textit{Position = Creator}} \\ \hline
 
 What agents can receive organizational messages? & \multicolumn{2}{|p{6cm}|}{Any agent from this  organization, except who what only play roles with Position = Creator} & \textit{Supervisors} receive all messages. \textit{Subordinates} only receive messages sent by \textit{Supervisors}. \textit{Creators} do not receive messages.  \\ \hline
 
-What agents can register/deregister organizations? & \multicolumn{3}{|p{11.5cm}|}{Any agent from this  organization which plays roles with \textit{Position = Creator}}.\\ \hline
+What agents can register/deregister organizations? & \multicolumn{3}{|p{11.5cm}|}{Any agent from this  organization which plays roles with \textit{Position = Creator}} \\ \hline
 
 What agents can join an organization to another? & \multicolumn{3}{|p{11.5cm}|}{Any agent from this organization which plays both a role with Position = Creator and  a role with Position = Creator in the new Parent organization.}\\ \hline
 
@@ -192,10 +192,12 @@ Services registered and discovered by SF in \textsc{Thomas} are demanded or offe
 The set of services provided by the SF to manage the services of the platform (meta-services) are classified in 3 categories:
 
 \begin{itemize}
-	\item \textbf{Registration:} they allow adding and removing services from the SF directory (RegisterService, DeregisterService).
-	\item \textbf{Affordability:} they allow managing the association between providers and their services (RemoveProvider).
-	\item \textbf{Discovery:} services in charge of searching and composing services as an answer to user requirements (SearchService, GetService).
+	\item \textbf{Registration:} they allow adding and removing services from the SF directory.
+	\item \textbf{Affordability:} they allow managing the association between providers and their services.
+	\item \textbf{Discovery:} services in charge of searching and composing services as an answer to user requirements.
 \end{itemize}
+
+These services are described in more detail at Table \ref{tab:thomas_sf_services}.
 
 \subsection{Organization Manager Service}
 This component is in charge of organizations life cycle management, including specification and administration of their structural components (roles, organizative and units) and their execution components (participant agents and the roles they play; and active units in each moment).
@@ -203,24 +205,17 @@ This component is in charge of organizations life cycle management, including sp
 The OMS provides agents with a set of services for organization life-cycle management (\cite{DelVal09}), classified in:
 
 \begin{itemize}
-	\item \textbf{Structural services:} which modify the structural organization specification, i.e. roles and organizational units (RegisterRole, DeregisterRole, RegisterUnit, DeregisterUnit, JointUnit).
-	\item \textbf{Informative services:} that give information of the current state of the organization (InformRole, InformUnit, InformUnitRoles, InformAgentRole, InformMembers, InformQuantityMembers).
-	\item \textbf{Dynamic services:} that allow managing role enactment and dynamic entry/exit of agents (AcquireRole, LeaveRole, AllocateRole, DeallocateRole) .
+	\item \textbf{Structural services:} which modify the structural organization specification, i.e. roles, organizational units and norms (see Table \ref{tab:thomas_OMSProxy_registration}).
+	\item \textbf{Informative services:} that give information of the current state of the organization (see Table \ref{tab:thomas_OMSProxy_information}).
+	\item \textbf{Dynamic services:} that allow managing role enactment and dynamic entry/exit of agents (see Table \ref{tab:thomas_OMSProxy_compound}).
 \end{itemize}
 
 These services are  published in the SF and also available thought the OMSproxy class (see section \ref{sec:programmingAgentsThomas}).
 
-% \begin{figure}[h!t]
-% 	\centering
-% 	\includegraphics[width=1.0\textwidth]{Thomas/images/thomas_intro.png}
-% 	\caption{\textsc{Thomas} architecture}
-% \end{figure}
 
 \subsection{Normative Context}
 
-
-
-There are some predefined norms (called structural norms) which control the access to OMS services. Thus, some OMS services are only available if  agents which request them play some role inside the organization with a concrete position (table \ref{tab:rol_acces}). It is possible to avoid these structural norms or make them more restrictive by means of defining new norms using the \textit{registerNorm} service of the OMS. In this way, users can add \textsc{Permitted} or \textsc{Forbidden}  norms to relax or restrict  the access control to the OMS services in an organization. 
+As we explain in sections \ref{sec:ThomasRoles} and \ref{sec:unitsinthomas}, there are some predefined norms (called structural norms) which control the access to OMS services. Thus, some OMS services are only available if  agents which request them play some role inside the organization with a concrete position (table \ref{tab:rol_acces}). It is possible to avoid these structural norms or make them more restrictive by means of defining new norms using the \textit{registerNorm} service of the OMS. In this way, users can add \textsc{Permitted} or \textsc{Forbidden}  norms to relax or restrict  the access control to the OMS services in an organization. 
 
 
 \begin{table}[h!t]
@@ -260,13 +255,15 @@ InformNorm & x & x & x &x  \\
 \end{table}
 
 \subsubsection{Norm Description}
-Norms are registered into an organizational unit with a unique name inside that organization. They should be written following the syntax of the \textsc{Thomas} normative language (see appendix \ref{app:BNFSyntax} for a detailed explanation). Concretely, the appearance of a norm is as follows : \\
-$@normName[Deontic, Target, Action, Activation, Expiration]$ where:
+Norms are registered into an organizational unit with a unique name inside that organization. They should be written following the syntax of the \textsc{Thomas} normative language (see appendix \ref{app:BNFSyntax} for a detailed explanation) which is based on AgentSpeak language. Concretely, the appearance of a norm is as follows : \\
+$$@normName[Deontic, Target, Action, Activation, Expiration]$$
+where:
+
 \begin{itemize}
  \item $Deontic \in \lbrace f,o,p \rbrace$ , where $f$ is used for forbidden norms, which restrict the access to services; $o$ is used for obligation norms; and $p$ is used for permitted norms, which relax the access to services. Although a norm can be registered with a deontic value  of obligation, the OMS only manage forbidden or permitted norms. 	
  \item $Target=<type,id>$ where $type \in   \lbrace agentName, roleName, positionName \rbrace $, whereas $id$ is the associated value (for example, the position value \textit{creator}) or the anonymous variable ``\_'' (when any value is accepted).  The field \textit{target} allows users to determine which agents will be affected by a norm. For example, taking into account an scenario in which a norm was registered in a unit with the target $<agentName, consumer>$, this norm only affects the agent which name is \textit{consumer}. 
  
- \item $Action$ is the name of the service. \textsc{Thomas} only manage norms which action correspond with an OMS service.
+ \item $Action$ is the name of the service. \textsc{Thomas} only manage norms which action correspond with an OMS service (see appendix \ref{app:BNFSyntax} to build Action field correctly).
  
  \item $Activation$ is a well-formed formula expressed by means of first-order predicates which indicates the conditions to fulfil a norm. Until a service is provided, the OMS agent checks if some norm is satisfied, in which case that norm is applied. Users should add predicates related with data known in the \textsc{Thomas} world, such as role details, played roles , organization structure, agent names, etc (see \ref{app:BNFSyntax} for further explanation). The \textit{Activation}  could be empty (``\_'' ), in that case the norm is always fulfilled.
  
@@ -278,15 +275,12 @@ $@normName[Deontic, Target, Action, Activation, Expiration]$ where:
 
 The OMS agent is the responsible of verifying if some norm applies before provide a service. Thus, users can add forbidden or permitted norms to restrict or relax the predefined rules for accessing to services,  respectively. In particular, the order in which the restrictions and norms are checked before provide a service of the OMS is as follows: 
 \begin{enumerate}
-\item \textit{Checking of the input parameters}. The consistency of the given data (existing roles, valid organizations, etc.) is checked.
-
-\item \textit{Consistency constraints.} As a result of providing a service some consistency constraint can be  violated, the service is not provided and the requester agent is informed about it. For example, it is not allowed to delete a role which is currently played by an agent.
-
 \item \textit{\textsc{Permitted} norms.} It is checked if there are some permitted norms registered which action correspond with the requested service. In that case, it is also checked if those norms are fulfilled, that is, their target and activations are satisfied whereas their expiration are not. In case a permitted norm is satisfied, the service is provided with no restrictions and  no structural norm related with unit types or role properties are considered. Concretely, the properties of the roles (accessibility, visibility, position) are not taking into account in the execution of the services (such as informative services).
 
-\item \textit{\textsc{Forbidden} norms.}  It is checked if there are some forbidden norms registered which action correspond with the requested service. In that case, it is also checked if those norms are fulfilled, that is, their target and activations are satisfied whereas their expiration are not. If a forbidden norm is satisfied, the service is not provided, the applicant is informed and no more checkings are made. 
+\item \textit{\textsc{Forbidden} norms.}  It is checked if there are some forbidden norms registered which action correspond with the requested service. In that case, it is also checked if those norms are fulfilled, that is, their target and activations are satisfied whereas their expiration are not. If a forbidden norm is satisfied, the service is not provided and a ForbiddenNormException exception is thrown. 
 
 \item \textit{Structural norms.} All predefined norms of the service are checked before provide the service. If no one is satisfied, the service is provided as usual.
+\end{enumerate}
 
 \subsubsection{Normative Example: Forum}
 
@@ -298,28 +292,29 @@ The OMS agent is the responsible of verifying if some norm applies before provid
 \end{figure}
 
 In this section,  an example of how to use the normative context provided by \textsc{Thomas} is explained. Concretely,  the Figure \ref{fig:normExample} shows the scenario, where there are three units:  an organization named \textit{forum} (which type is \textit{hierarchy}) and its two descendent organizations \textit{fraternity} (which type is \textit{team}) and \textit{panel} (which type is \textit{flat}). Furthermore, there is the \textit{virtual} unit, which represents the \textsc{Thomas} world  and acts as the starting point to enter in the system, as mentioned before (see section \ref{sec:unitsinthomas}). In the \textit{forum} unit there are the following roles:
+
 \begin{itemize}
-\item \textit{moderator}: it acts as supervisor and moderator of the forum. Its role attributes are: position=supervisor; accessibility=internal; visibility=private.
-\item participant: it participates in the forum.  Its role attributes are: position=subordinate; accessibility=internal; visibility=public.
+\item \textbf{Moderator:} It acts as supervisor and moderator of the forum. Its role attributes are: position=supervisor; accessibility=internal; visibility=private.
+\item \textbf{Participant:} It participates in the forum.  Its role attributes are: position=subordinate; accessibility=internal; visibility=public.
 \end{itemize}
 
 The \textit{fraternity} unit has two roles:
 
-\begin{enumerate}
-\item president: It acts as a president of the \textit{fraternity} and it is in  charge of adding/deleting norms and roles.  Only one agent can play this role. Its role attributes are: position=creator; accessibility=internal; visibility=private.
-\item brother: It represents a member of the \textit{fraternity}, in fact, all the participants of the \textit{fraternity} should play this role.  Its role attributes are: position=member; accessibility=external; visibility=public.
-\end{enumerate}
+\begin{itemize}
+\item \textbf{President:} It acts as a president of the \textit{fraternity} and it is in  charge of adding/deleting norms and roles.  Only one agent can play this role. Its role attributes are: position=creator; accessibility=internal; visibility=private.
+\item \textbf{Brother:} It represents a member of the \textit{fraternity}, in fact, all the participants of the \textit{fraternity} should play this role.  Its role attributes are: position=member; accessibility=external; visibility=public.
+\end{itemize}
 
 The \textit{panel} unit has three different roles:
-\begin{enumerate}
-\item \textit{moderator}: it should be played by an unique agent which also plays the role \textit{moderator} in the \textit{forum} unit. It is in charge of adding new norms to the unit. It can not add new roles. Its role attributes are: position=creator; accessibility=internal; visibility=private.
-\item \textit{reporter}: it should be played by agents which add news to the panel. They are not allowed to add norms/roles in the unit. Its role attributes are: position=member; accessibility=external; visibility=private.
-\item \textit{follower}: it should be played by agents which read news from the panel.  They are not allowed to add norms/roles in the unit. Its role attributes are: position=member; accessibility=external; visibility=public.
-\end{enumerate}
+\begin{itemize}
+\item \textbf{Moderator:} It should be played by an unique agent which also plays the role \textit{moderator} in the \textit{forum} unit. It is in charge of adding new norms to the unit. It can not add new roles. Its role attributes are: position=creator; accessibility=internal; visibility=private.
+\item \textbf{Reporter:} It should be played by agents which add news to the panel. They are not allowed to add norms/roles in the unit. Its role attributes are: position=member; accessibility=external; visibility=private.
+\item \textbf{Follower:} It should be played by agents which read news from the panel.  They are not allowed to add norms/roles in the unit. Its role attributes are: position=member; accessibility=external; visibility=public.
+\end{itemize}
 
-Regarding the \textit{forum} unit, it is not allowed creating new roles with position \textit{creator}.  Respecting the fraternity unit, it is prohibit  creating new roles with position \textit{creator}. Concerning   the \textit{panel} organization, it is prohibit that agents known which roles are played by other agents. Also,  changing the parent unit of the organizations is prohibit.   
+Regarding the \textit{forum} unit, it is not allowed to create new roles with position \textit{creator}.  Respecting the fraternity unit, it is prohibited to create new roles with position \textit{creator}. Concerning the \textit{panel} organization, it is prohibited that agents know which roles are played by other agents. Also, changing the parent unit of the organizations is prohibited.   
 
-Following,  some of the norms needed to obey the specification of the forum scenario are described using the \textsc{Thomas} syntax (see appendix \ref{app:BNFSyntax}, section \ref{sec:forumpredicates} in order to known for the predicates  the OMS uses for reasoning):
+Following, some of the norms needed to obey the specification of the forum scenario are described using the \textsc{Thomas} syntax (see appendix \ref{app:BNFSyntax}, section \ref{sec:forumpredicates} in order to know for the predicates  the OMS uses for reasoning):
 \begin{itemize}
 \item \textbf{Unit \textit{forum}}
 \begin{itemize}
@@ -458,22 +453,7 @@ joinUnit(panel,_,_), _ , _ ]
 
 \end{itemize}
 
-
 \end{itemize}
-
-
-
-
-
-
-
-
-
-
-
-
-\end{enumerate}
-
 
 
 %==================================================================
@@ -508,200 +488,157 @@ On the contrary, in the second option, the url where OMS services are deployed (
 \end{lstlisting}
 
 
-OMSProxy provides a developer with a set of methods to manage available services. This services are classified into three different types: structural, dynamic and informative. Tables \ref{tab:thomas_OMSProxy_registration}, \ref{tab:thomas_OMSProxy_information}, \ref{tab:thomas_OMSProxy_compound} and \ref{tab:thomas_OMSProxy_messaging} show respectively these sub-types. These methods return the string ``ok'' if are succesfully provided. If not, they through a \textsc{Thomas} exception (see appendix \ref{app:Exceptions} for further details). 
+OMSProxy provides a developer with a set of methods to manage available services. This services are classified into three different types: structural, dynamic and informative. Tables \ref{tab:thomas_OMSProxy_registration}, \ref{tab:thomas_OMSProxy_information}, \ref{tab:thomas_OMSProxy_compound} and \ref{tab:thomas_OMSProxy_messaging} show respectively these sub-types. These methods return a string if are successfully provided. If not, they through a \textsc{Thomas} exception (see appendix \ref{app:Exceptions} for further details). 
 
 Some OMS services are only available if  agents which request them play a role inside the organization with a determined position. Table \ref{tab:rol_acces} summarizes  the available access to the services taking into account the position of the role.
 
 
-
-
-
-
-
-\begin{table}[h!t]
-\begin{tabular}{|l|p{5cm}|p{5cm}|}
-\hline
-OMS-Service & Description & Parameters \\ \hline
-RegisterRole & Creates a new role within a unit &
-
-
-\textbf{RoleID: } Identifier of the new role.
-
-\textbf{UnitID:} Identifier of the organizational unit.
-
-\textbf{Accessibility:} Considers two types of roles: \textit{internal} or \textit{external}.
-
-\textbf{Visibility:} Is defined (\textit{public}) or from inside (\textit{private}).
-
-\textbf{Position:} Position inside the unit, such as \textit{member}, \textit{supervisor} or \textit{subordinate}.
-
-\\  \hline
-
-DeregisterRole & Removes a specific role from a unit
-scription from a unit
-&
-\textbf{RoleID:} Identifier of the role.
-
-\textbf{UnitID:} Identifier of the unit.
-
-\\  \hline
-
-RegisterUnit & Creates a new unit within a specific organization
- &
-
-\textbf{UnitID:} Identifier of the new unit.
-
-\textbf{Type:} Indicates the topology of the new unit: (i) \textit{Hierarchy} (ii) \textit{Team},(iii)\textit{ Flat}.
-
-\textbf{ParentUnit:} Identifier of the parent unit.
-
-\textbf{Creator:} The name of the new creator role.
-
-\\  \hline
-
-DeregisterUnit & Removes a unit from an organization
- &
-\textbf{UnitID:} Identifier of the unit.
-
-\\  \hline
-
-JointUnit & Updates the parent unit
- &
-\textbf{UnitID:} Identifier of the unit.
-
-\textbf{ParentUnit:} Identifier of the new parent unit.
-
-\\  \hline
-\end{tabular}
+\begin{longtable}{|p{3cm}|r|p{8.5cm}|}
+  \hline
+  \multirow{8}{*}{\textbf{RegisterRole}} & Description: & Creates a new role within a unit \\ \cline{2-3}
+    & Inputs: & RoleName (Identifier of the new role) \\ \cline{3-3}
+    &  & UnitName (Identifier of the organizational unit) \\ \cline{3-3} 
+    &  & Accessibility (\texttt{internal} or \texttt{external}) \\ \cline{3-3} 
+    &  & Visibility (\texttt{public} or \texttt{private}) \\ \cline{3-3} 
+    &  & Position (\texttt{member}, \texttt{supervisor} or \texttt{subordinate}) \\ \cline{2-3}
+    & Outputs:     & RoleName + \texttt{created} \\ \cline{2-3}
+    & Exceptions:  & InvalidPositionException, ForbiddenNormException, NotSupervisorOrCreatorInUnitException, NotMemberOrCreatorInUnitException, InvalidUnitTypeException, NotInUnitAndNotCreatorException, AgentNotInUnitException, RoleExistsInUnitException, UnitNotExistsException, NotValidIdentifierException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{5}{*}{\textbf{DeregisterRole}} & Description: & Removes a specific role from a unit \\ \cline{2-3}
+    & Inputs: & RoleName (Identifier of the role) \\ \cline{3-3}
+    &  & UnitName (Identifier of the unit) \\ \cline{2-3}
+    & Outputs:     & RoleName + \texttt{deleted} \\ \cline{2-3}
+    & Exceptions:  & ForbiddenNormException, NotSupervisorOrCreatorInUnitException, NotMemberOrCreatorInUnitException, InvalidUnitTypeException, NotInUnitAndNotCreatorException, AgentNotInUnitException, RoleInUseException, RoleContainsNormsException, RoleNotExistsException, UnitNotExistsException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{7}{*}{\textbf{RegisterUnit}} & Description: & Creates a new unit within a specific organization \\ \cline{2-3}
+    & Inputs: & UnitName (Identifier of the new unit) \\ \cline{3-3}
+    &  & Type (\texttt{flat}, \texttt{team} or \texttt{hierarchy}) \\ \cline{3-3}
+    &  & ParentUnitName (Identifier of the parent unit) \\ \cline{3-3}
+    &  & Creator (The name of the new creator role) \\ \cline{2-3}
+    & Outputs:     & UnitName + \texttt{created} \\ \cline{2-3}
+    & Exceptions   & ParentUnitNotExistsException, ForbiddenNormException, NotCreatorInParentUnitException, UnitExistsException, NotValidIdentifierException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{4}{*}{\textbf{DeregisterUnit}} & Description: & Removes a unit from an organization \\ \cline{2-3}
+    & Inputs: & UnitName (Identifier of the unit) \\ \cline{2-3}
+    & Outputs:     & UnitName + \texttt{deleted} \\ \cline{2-3}
+    & Exceptions:  & NotCreatorAgentInUnitException, SubunitsInUnitException, ForbiddenNormException, NotCreatorInUnitOrParentUnitException, VirtualUnitException, UnitNotExistsException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{5}{*}{\textbf{JoinUnit}} & Description: & Updates the parent unit \\ \cline{2-3}
+    & Inputs: & UnitName (Identifier of the unit) \\ \cline{3-3}
+    &  & ParentUnitName (Identifier of the new parent unit) \\ \cline{2-3}
+    & Outputs:     & UnitName + \texttt{joined to} + ParentUnitName \\ \cline{2-3}
+    & Exception:   & SameUnitException, VirtualParentException, ForbiddenNormException, NotCreatorInParentUnitException, NotCreatorInUnitException, AgentIDntNotInUnitException, ParentUnitNotExistsException, UnitNotExistsException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{5}{*}{\textbf{RegisterNorm}} & Description: & Creates a new norm within a specific organization that can be associated to a role, position or agent. \\ \cline{2-3}
+    & Inputs: & UnitName (Identifier of the unit) \\ \cline{3-3}
+    &  & NormContent (The norm described in THOMAS language, see appendix \ref{app:BNFSyntax}) \\ \cline{2-3}
+    & Outputs:     & NormName + \texttt{registered} \\ \cline{2-3}
+    & Exceptions:  & RoleNotExistsException, InvalidPositionException, InvalidUnitTypeException, ForbiddenNormException, NotSupervisorOrCreatorInUnitException, NotMemberOrCreatorInUnitException, InvalidUnitTypeException, NotInUnitAndNotCreatorException, AgentNotInUnitException, NormExistsInUnitException, UnitNotExistsException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{5}{*}{\textbf{DeregisterNorm}} & Description: & Removes a specific norm from a unit \\ \cline{2-3}
+    & Inputs: & NormName (Identifier of the norm) \\ \cline{3-3}
+    &  & UnitName (Identifier of the unit) \\ \cline{2-3}
+    & Outputs:     & NormName + \texttt{deleted} \\ \cline{2-3}
+    & Exceptions:  & ForbiddenNormException, NotSupervisorOrCreatorInUnitException, NotMemberOrCreatorInUnitException, InvalidUnitTypeException, NotInUnitAndNotCreatorException, AgentNotInUnitException, NormNotExistsException, UnitNotExistsException, EmptyParametersException \\ \hline
 \caption{OMS Proxy: Structural services API}
 \label{tab:thomas_OMSProxy_registration}
-\end{table}
+\end{longtable}
 
-
-
-\begin{table}[h!t]
-\begin{tabular}{|l|p{5cm}|p{5cm}|}
-\hline
-OMS-Service & Description & Parameters \\ \hline
-
-InformRole & Provides a role description of a specific unit
-&
-
-\textbf{RoleID:} Identifier of the role.
-\textbf{UnitID:} Identifier of the unit.
-
-\\ \hline
-
-InformUnit & Provides unit description
-&
-
-\textbf{UnitID:} Identifier of the unit.
-
-\\ \hline
-
-InformUnitRoles & Used for requesting the list of roles that have been registered inside a unit.
-&
-
-\textbf{UnitID: }Identifier of the unit.
-
-\\ \hline
-
-
-InformAgentRole & Requesting the list of roles and units in which an agent is in a specific moment.
-&
-
-\textbf{RequestedAgentID: } Identifier of the agent requested.
-
-\\ \hline
-InformMembers & Indicates entities that are members of a specific unit. Optionally, it is possible to specify a role and position of this unit, so then only members playing this role or position are detailed.
- &
-
-\textbf{UnitID:} Identifier of the unit.
-
-\textbf{RoleID:} Identifier of the role.
-
-\textbf{PositionID:} Identifier of the position inside the unit, such as member, supervisor or subordinate.
-
-\\ \hline
- InformQuantityMembers & Provides the number of current members of a specific unit. Optionally, if a role and position is indicated then only the quantity of members playing this roles or position is detailed.
- &
-
-\textbf{UnitID:} Identifier of the unit.
-
-\textbf{RoleID:} Identifier of the role.
-
-\textbf{PositionID:} Identifier of the position inside the unit, such as member, supervisor or subordinate.
-
-\\ \hline
-
-\end{tabular}
+\begin{longtable}{|p{3cm}|r|p{8.5cm}|}
+  \hline
+  \multirow{5}{*}{\textbf{InformRole}} & Description: & Provides a role description of a specific unit \\ \cline{2-3}
+    & Inputs: & RoleName (Identifier of the role) \\ \cline{3-3}
+    &  & UnitName (Identifier of the unit) \\ \cline{2-3}
+    & Outputs:     & \textless Accessibility, Visibility, Position\textgreater \\ \cline{2-3}
+    & Exceptions:  & ForbiddenNormException, VisibilityRoleException, RoleNotExistsException, UnitNotExistsExceptiontsException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{4}{*}{\textbf{InformUnit}} & Description: & Provides unit description \\ \cline{2-3}
+    & Inputs: & UnitName (Identifier of the unit) \\ \cline{2-3}
+    & Outputs:     & \textless UnitType, ParentUnitName\textgreater \\ \cline{2-3}
+    & Exceptions:  & ForbiddenNormException, NotInUnitOrParentUnitException, InvalidUnitTypeException, UnitNotExistsException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{4}{*}{\textbf{InformUnitRoles}} & Description: & List the roles that have been registered inside a unit \\ \cline{2-3}
+    & Inputs: & UnitName (Identifier of the unit) \\ \cline{2-3}
+    & Outputs:     & \textless RoleName, Accessibility, Visibility, Position\textgreater \\ \cline{2-3}
+    & Exceptions:  & ForbiddenNormException, UnitNotExistsException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{4}{*}{\textbf{InformAgentRole}} & Description: & List the roles and units in which an agent is in a specific moment. \\ \cline{2-3}
+    & Inputs: & RequestedAgentName (Identifier of the agent requested) \\ \cline{2-3}
+    & Outputs:     & \textless RoleName, UnitName\textgreater \\ \cline{2-3}
+    & Exceptions:  & AgentNotExistsException, ForbiddenNormException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{6}{*}{\textbf{InformMembers}} & Description: & Indicates entities that are members of a specific unit. Optionally, it is possible to specify a role and position of this unit, so then only members playing this role or position are detailed \\ \cline{2-3}
+    & Inputs: & UnitName (Identifier of the unit) \\ \cline{3-3}
+    &  & RoleName (Identifier of the role) \\ \cline{3-3}
+    &  & Position (\texttt{member}, \texttt{supervisor} or \texttt{subordinate}) \\ \cline{2-3}
+    & Outputs:     & \textless AgentName, RoleName\textgreater \\ \cline{2-3}
+    & Exceptions:  & RoleNotExistsException, InvalidRolePositionException, ForbiddenNormException, AgentNotExistsException, UnitNotExistsException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{6}{*}{\parbox{3cm}{\textbf{InformQuantity- Members}}} & Description: & Provides the number of current members of a specific unit. Optionally, if a role and position is indicated then only the quantity of members playing this roles or position is detailed \\ \cline{2-3}
+    & Inputs: & UnitName (Identifier of the unit) \\ \cline{3-3}
+    &  & RoleName (Identifier of the role) \\ \cline{3-3}
+    &  & Position (\texttt{member}, \texttt{supervisor} or \texttt{subordinate}) \\ \cline{2-3}
+    & Outputs:     & Integer \\ \cline{2-3}
+    & Exceptions:  & RoleNotExistsException, InvalidRolePositionException, ForbiddenNormException, AgentNotExistsException, UnitNotExistsException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{5}{*}{\textbf{InformNorm}} & Description: & Provides the content of the norm \\ \cline{2-3}
+    & Inputs: & NormName (Identifier of the norm) \\ \cline{3-3}
+    &  & UnitName (Identifier of the unit) \\ \cline{2-3}
+    & Outputs:     & ContentNorm  \\ \cline{2-3}
+    & Exceptions:  & ForbiddenNormException, NotInUnitOrParentUnitException, InvalidUnitTypeException, NormNotExistsException, UnitNotExistsException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{5}{*}{\parbox{3cm}{\textbf{InformTarget- Norms}}} & Description: & Provides information about a specific norm \\ \cline{2-3}
+    & Inputs: & TargetTypeName (\texttt{roleName}, \texttt{positionName} or \texttt{agentName}) \\ \cline{3-3}
+    &  & TargetTypeValue (Identifier of the object affected by norm or '\_') \\ \cline{3-3}
+    &  & UnitName (Identifier of the unit) \\ \cline{2-3}
+    & Outputs:     & \textless NormName, UnitName, TargetTypeName, TargetTypeValue\textgreater \\ \cline{2-3}
+    & Exceptions:  & ForbiddenNormException, AgentNotInUnitException, InvalidTargetTypeException, UnitNotExistsException, EmptyParametersException \\ \hline
 \caption{OMS Proxy: Informative services API}
 \label{tab:thomas_OMSProxy_information}
-\end{table}
+\end{longtable}
 
 
-\begin{table}[h!t]
-\begin{tabular}{|l|p{5cm}|p{5cm}|}
-\hline
-OMS-Service & Description & Parameters \\ \hline
-AcquireRole & Requests the adoption of a specific role within a unit.
- &
-
-\textbf{RoleID:} Identifier of the role.
-
-\textbf{
-UnitID:} Identifier of the unit.
-
-\\ \hline
-LeaveRole & Requests to leave a role.
-&
-
-\textbf{RoleID:} Identifier of the role.
-
-\textbf{UnitID:} Identifier of the unit.
-
-\\ \hline
-
-AllocateRole & Forces an agent to acquire a specific role.
- &
-
-\textbf{RoleID:} Identifier of the role.
-
-\textbf{UnitID:} Identifier of the unit.
-
-\textbf{TargetAgentID:} Identifier of the agent.
- \\ \hline
-
-DeallocateRole & Forces an agent to leave a specific role.
- &
-
-\textbf{RoleID:} Identifier of the role.
-
-\textbf{UnitID:} Identifier of the unit.
-
-\textbf{TargetAgentID:} Identifier of the agent.
- \\ \hline
-\end{tabular}
+\begin{longtable}{|p{3cm}|r|p{8.5cm}|}
+  \hline
+  \multirow{5}{*}{\textbf{AcquireRole}} & Description: & Requests the adoption of a specific role within a unit \\ \cline{2-3}
+    & Inputs: & RoleName (Identifier of the role) \\ \cline{3-3}
+    &  & UnitName (Identifier of the unit) \\ \cline{2-3}
+    & Outputs:     & RoleName + \texttt{acquired} \\ \cline{2-3}
+    & Exceptions:  & PlayingRoleException, ForbiddenNormException, NotSupervisorOrCreatorInUnitException, NotInUnitOrParentUnitException, RoleNotExistsException, UnitNotExistsException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{5}{*}{\textbf{LeaveRole}} & Description: & Requests to leave a role \\ \cline{2-3}
+    & Inputs: & RoleName (Identifier of the role) \\ \cline{3-3}
+    &  & UnitName (Identifier of the unit) \\ \cline{2-3}
+    & Outputs:     & RoleName + \texttt{left} \\ \cline{2-3}
+    & Exceptions:  & NotPlaysRoleException, ForbiddenNormException, RoleNotExistsException, UnitNotExistsException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{6}{*}{\textbf{AllocateRole}} & Description: & Forces an agent to acquire a specific role \\ \cline{2-3}
+    & Inputs: & RoleName (Identifier of the role) \\ \cline{3-3}
+    &  & UnitName (Identifier of the unit) \\ \cline{3-3}
+    &  & TargetAgentName (Identifier of the agent that will acquire the role) \\ \cline{2-3}
+    & Outputs:     & RoleName + \texttt{acquired} \\ \cline{2-3}
+    & Exceptions:  & SameAgentNameException, PlayingRoleException, ForbiddenNormException, NotSupervisorOrCreatorInUnitException, AgentNotInUnitException, NotMemberOrCreatorInUnitException, NotInUnitAndNotCreatorException, InvalidUnitTypeException, RoleNotExistsException, UnitNotExistsException, NotValidIdentifierException, EmptyParametersException \\ \hline
+  \hline
+  \multirow{6}{*}{\textbf{DeallocateRole}} & Description: & Forces an agent to leave a specific role \\ \cline{2-3}
+    & Inputs: & RoleName (Identifier of the role) \\ \cline{3-3}
+    &  & UnitName (Identifier of the unit) \\ \cline{3-3}
+    &  & TargetAgentName (Identifier of the agent that will leave the role) \\ \cline{2-3}
+    & Outputs:     & RoleName + \texttt{acquired} \\ \cline{2-3}
+    & Exceptions:  & SameAgentNameException, NotPlaysRoleException, ForbiddenNormException, NotSupervisorOrCreatorInUnitExceptioneption, AgentNotInUnitException, NotMemberOrCreatorInUnitException, NotInUnitAndNotCreatorException, InvalidUnitTypeException, RoleNotExistsException, UnitNotExistsException, EmptyParametersException \\ \hline
 \caption{OMS Proxy: Dynamic services API}
 \label{tab:thomas_OMSProxy_compound}
-\end{table}
+\end{longtable}
 
 
-\begin{table}[h!t]
-\begin{tabular}{|l|p{3cm}|p{5cm}|}
-\hline
-OMS-Service & Description & Parameters \\ \hline
-buildOrganizationalMessage & Builds a new organizational message.
- &
-\textbf{OrganizationID:} Identifier of the organization.
- \\ \hline
-\end{tabular}
+\begin{longtable}{|p{3cm}|r|p{8.5cm}|}
+  \hline
+  \multirow{4}{*}{\parbox{3cm}{\textbf{BuildOrganiza- tionalMessage}}} & Description: & Builds a new organizational message \\ \cline{2-3}
+    & Inputs: & UnitName (Identifier of the unit) \\ \cline{2-3}
+    & Outputs:     & Message built and ready to send\\
+    & Exceptions:  & UnitNotExistsException, NotPlaysAnyRoleException, InvalidUnitTypeException, AgentNotInUnitException, OnlyPlaysCreatorException \\ \hline
 \caption{OMS Proxy: Organizational messaging service API}
 \label{tab:thomas_OMSProxy_messaging}
-\end{table}
-
-
-
+\end{longtable}
 
 
 \subsubsection{SFProxy}
@@ -720,48 +657,35 @@ private SFProxy sfProxy = new SFProxy(this, "url");
 
 SFProxy provides a developer with a set of methods to manage available services, as Table \ref{tab:thomas_sf_services} shows.
 
-% \begin{table}[h!t]
-% \begin{tabular}{|l|l|p{3cm}|p{4cm}|}
-% \hline
-% Type & SF-Service & Description & Parameters \\ \hline
-% \multicolumn{ 1}{|c|}{Registration} & RegisterService & Registers a service or part of it &
-% service URL \\ \hline
-% \multicolumn{ 1}{|l|}{} & DeregisterService & Deregisters a complete service
-% & service profile
-%  \\ \hline
-% \multicolumn{1}{|c|}{Affordb.} & RemoveProvider & Removes a provider (agent, organization or web service) of a service & (service profile, provider name or grounding ID)
-%  \\ \hline
-% \multicolumn{ 1}{|c|}{Discovery} & SearchService & Searches a service that satisfies the user requirements
-% & (inputs, outputs, keywords)
-%  \\ \cline{ 2- 4}
-% \multicolumn{ 1}{|l|}{} & GetService & Gets the description of the service
-% & service profile
-%  \\ \hline
-% \end{tabular}
-% \caption{SF Proxy API}
-% \label{tab:thomas_sf_services}
-% \end{table}
-
-\begin{table}[h!t]
-\begin{center}
-\begin{tabular}{|l|p{1.75cm}||p{2.5cm}|p{2.5cm}|p{3.5cm}|}
-\hline
-\textbf{Type} & \textbf{Service} & \textbf{Description} & \textbf{Inputs} & \textbf{Output} \\ \hline \hline
-
-\multicolumn{ 1}{|c|}{Registration} & Register Service & Registers a service or part of it & Service URL & Description of what is registered and complete OWL-S specification \\ \hline
-
-\multicolumn{ 1}{|c|}{} & Deregister Service & Deregisters a complete service & Service profile & Ok if it is deregistered. Else error description\\ \hline \hline
-
-\multicolumn{1}{|c|}{Affordability} & Remove Provider & Removes a provider (agent, organization or web service) of a service  & (Service profile, provider name or grounding ID) & Ok if it is removed. Else error description \\ \hline \hline
-
-\multicolumn{ 1}{|c|}{Discovery} & Get Service & Gets the OWL-S description of the service & Service profile & OWL-S specification of the service or error description \\ \hline
-
-\multicolumn{ 1}{|c|}{} & Search Service & Searches a service & (Inputs, Outputs, Keywords) & Weighted services list or error description \\ \hline
-\end{tabular}
-\end{center}
+\begin{longtable}{|p{0.5cm}||p{3cm}|r|p{8cm}|}
+  \hline
+  \multirow{8}{*}{\begin{turn}{90}Registration\end{turn}} & \multirow{4}{*}{\textbf{RegisterService}} & Description: & Registers a service or part of it \\ \cline{3-4}
+    &  & Inputs: & ServiceURL \\ \cline{3-4}
+    &  & Outputs: & \texttt{Service registered} + ServiceURL \\ \cline{3-4}
+    &  & Exceptions: & DBConnectionException, AlreadyRegisteredException, InvalidServiceURLException, ServiceProfileNotFoundException, InvalidDataTypeException, MySQLException \\ \cline{2-4}
+    & \multirow{4}{*}{\textbf{DeregisterService}} & Description: & Deregisters a complete service \\ \cline{3-4}
+    &  & Inputs: & ServiceProfile \\ \cline{3-4}
+    &  & Outputs: & \texttt{Service} + ServiceProfile + \texttt{Deregistered} \\ \cline{3-4} 
+    &  & Exceptions: & ServiceURINotFoundException, ServiceProfileNotFoundException, DBConnectionException, MySQLException\\ \hline
+  \hline
+  \multirow{4}{*}{\begin{turn}{90}Affordability\end{turn}} & \multirow{4}{*}{\textbf{RemoveProvider}} & Description: & Removes a provider (agent, organization or web service) of a service \\ \cline{3-4}
+    &  & Inputs: & ProviderName (that can be a ServiceProfile, ProviderName or GroundingID) \\ \cline{3-4}
+    &  & Outputs: & \texttt{Provider or grounding} + ProviderName + \texttt{removed} \\ \cline{3-4}
+    &  & Exceptions: & ServiceProfileNotFoundException, DBConnectionException \\ \hline
+  \hline
+  \multirow{10}{*}{\begin{turn}{90}Discovery\end{turn}} & \multirow{4}{*}{\textbf{GetService}} & Description: & Gets the OWL-S description of the service \\ \cline{3-4}
+    &  & Inputs: & ServiceProfile \\ \cline{3-4}
+    &  & Outputs: & OWL-S specification of the service \\ \cline{3-4}
+    &  & Exceptions: & ServiceProfileNotFoundException, DBConnectionException, MySQLException \\ \cline{2-4} \cline{2-4}
+    & \multirow{6}{*}{\textbf{SearchService}} & Description: & Searches a service \\ \cline{3-4}
+    &  & Inputs: & Inputs (of the service to search) \\ \cline{4-4}
+    &  &  & Outputs (of the service to search) \\ \cline{4-4}
+    &  &  & Keywords (of the service to search) \\ \cline{3-4}
+    &  & Outputs: & \textless ServiceProfile, Weigth\textgreater \\ \cline{3-4}
+    &  & Exceptions: & DBConnectionException, InvalidDataTypeException, ServicesNotFoundException, MySQLException \\ \hline
 \caption{SF Proxy API}
 \label{tab:thomas_sf_services}
-\end{table}
+\end{longtable}
 
 
 
