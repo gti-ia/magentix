@@ -189,7 +189,7 @@ Services registered and discovered by SF in \textsc{Thomas} are demanded or offe
 \end{figure}
 
 
-The set of services provided by the SF to manage the services of the platform (meta-services) are classified in 3 categories:
+The set of services provided by the SF to manage the services of the platform (meta-services) are classified in 3 categories (these services are described in more detail at Table \ref{tab:thomas_sf_services}):
 
 \begin{itemize}
 	\item \textbf{Registration:} they allow adding and removing services from the SF directory.
@@ -197,7 +197,7 @@ The set of services provided by the SF to manage the services of the platform (m
 	\item \textbf{Discovery:} services in charge of searching and composing services as an answer to user requirements.
 \end{itemize}
 
-These services are described in more detail at Table \ref{tab:thomas_sf_services}.
+
 
 \subsection{Organization Manager Service}
 This component is in charge of organizations life cycle management, including specification and administration of their structural components (roles, organizative and units) and their execution components (participant agents and the roles they play; and active units in each moment).
@@ -255,7 +255,7 @@ InformNorm & x & x & x &x  \\
 \end{table}
 
 \subsubsection{Norm Description}
-Norms are registered into an organizational unit with a unique name inside that organization. They should be written following the syntax of the \textsc{Thomas} normative language (see appendix \ref{app:BNFSyntax} for a detailed explanation) which is based on AgentSpeak language. Concretely, the appearance of a norm is as follows : \\
+Norms are registered into an organizational unit with a unique name inside that organization. They should be written following the syntax of the \textsc{Thomas} normative language (see appendix \ref{app:BNFSyntax} for a detailed explanation), which is based on AgentSpeak language. Concretely, the appearance of a norm is as follows : \\
 $$@normName[Deontic, Target, Action, Activation, Expiration]$$
 where:
 
@@ -312,7 +312,7 @@ The \textit{panel} unit has three different roles:
 \item \textbf{Follower:} It should be played by agents which read news from the panel.  They are not allowed to add norms/roles in the unit. Its role attributes are: position=member; accessibility=external; visibility=public.
 \end{itemize}
 
-Regarding the \textit{forum} unit, it is not allowed to create new roles with position \textit{creator}.  Respecting the fraternity unit, it is prohibited to create new roles with position \textit{creator}. Concerning the \textit{panel} organization, it is prohibited that agents know which roles are played by other agents. Also, changing the parent unit of the organizations is prohibited.   
+Regarding the \textit{forum} unit, creating new roles with position \textit{creator} is not allowed.  Respecting the fraternity unit, creating new roles with position \textit{creator} is prohibited. Concerning the \textit{panel} organization, it is prohibited that agents know which roles are played by other agents. Also, changing the parent unit of the organizations is prohibited.   
 
 Following, some of the norms needed to obey the specification of the forum scenario are described using the \textsc{Thomas} syntax (see appendix \ref{app:BNFSyntax}, section \ref{sec:forumpredicates} in order to know for the predicates  the OMS uses for reasoning):
 \begin{itemize}
@@ -498,7 +498,7 @@ Some OMS services are only available if  agents which request them play a role i
   \multirow{8}{*}{\textbf{RegisterRole}} & Description: & Creates a new role within a unit \\ \cline{2-3}
     & Inputs: & RoleName (Identifier of the new role) \\ \cline{3-3}
     &  & UnitName (Identifier of the organizational unit) \\ \cline{3-3} 
-    &  & Accessibility (\texttt{internal} or \texttt{external}) \\ \cline{3-3} 
+    &  & Accessibility (\texttt{internal} or \texttt{external}) \\ \cline{3-3} 
     &  & Visibility (\texttt{public} or \texttt{private}) \\ \cline{3-3} 
     &  & Position (\texttt{member}, \texttt{supervisor} or \texttt{subordinate}) \\ \cline{2-3}
     & Outputs:     & RoleName + \texttt{created} \\ \cline{2-3}
