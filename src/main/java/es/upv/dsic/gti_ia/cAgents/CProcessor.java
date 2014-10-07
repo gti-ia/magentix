@@ -110,6 +110,33 @@ public class CProcessor implements Runnable, Cloneable {
 	}
 
 	/**
+	 * Creates a new CProcessor associated to an agent
+	 * 
+	 * @param myAgent
+	 *            The associated agent
+	 */
+	protected CProcessor(CAgent myAgent, Queue<ACLMessage> messageQueue) {
+		this.myAgent = myAgent;
+		terminated = false;
+		BEGIN = new BeginState(BEGIN_STATE);
+
+		CANCEL = new CancelState();
+		CANCEL.setName(CANCEL_STATE);
+
+		SHUTDOWN = new ShutdownState();
+		SHUTDOWN.setMethod(new SHUTDOWN_Method());
+
+		SENDING_ERRORS = new SendingErrorsState();
+		SENDING_ERRORS.setName(SENDING_ERRORS_STATE);
+		SENDING_ERRORS.setMethod(new SENDING_ERRORS_Method());
+
+		this.registerFirstState(BEGIN);
+		this.registerState(SHUTDOWN);
+		this.registerState(SENDING_ERRORS);
+		this.messageQueue = messageQueue;
+	}
+	
+	/**
 	 * Adds a transition between two states
 	 * 
 	 * @param from

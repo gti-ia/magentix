@@ -74,6 +74,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import java.util.Queue;
+
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.BaseAgent;
@@ -114,6 +116,7 @@ public abstract class CAgent extends BaseAgent {
 														// until agent is ready
 
 	private long conversationCounter = 0;
+	private PendingQueueRepository pendingQueues = new PendingQueueRepository();
 
 	/**
 	 * Creates a new CAgent
@@ -163,6 +166,16 @@ public abstract class CAgent extends BaseAgent {
 	 */
 	public void addFactoryAsParticipant(CFactory factory) {
 		this.lock();
+		// Check if there are any message in the PendingQueueRepository
+		// that matches with the factory template.
+		ArrayList<QueueWithTimestamp> goodQueues = pendingQueues.popQueues(factory.getFilter());
+		if (goodQueues.size() > 0) {
+			for (QueueWithTimestamp qwt : goodQueues) {
+				Queue<ACLMessage> q = qwt.getQueue();
+				//processors.put(q.first().getConversationId(), new CProcessor(this, q));
+				factory.startConversation(q, null, false);
+			}
+		}
 		factory.setInitiator(false);
 		participantFactories.add(factory);
 		this.unlock();
@@ -433,19 +446,18 @@ public abstract class CAgent extends BaseAgent {
 				e.printStackTrace();
 			}
 		} // With this we stop the message process until agent is ready
-			// Temporal code
+		
+		// Temporal code
 		this.logger.info("Agent: " + this.getName() + " processing message");
-		this.logger.info("Agent: " + this.getName() + " Number of processors: "
-				+ processors.size());
-		this.logger.info("Agent: " + this.getName()
-				+ " Number of Participant CFactories "
-				+ participantFactories.size());
+		this.logger.info("Agent: " + this.getName() + " Number of processors: "+ processors.size());
+		this.logger.info("Agent: " + this.getName() + " Number of Participant CFactories "+ participantFactories.size());
 		// End of temporal code
+		
 		CProcessor auxProcessor = processors.get(msg.getConversationId());
 		boolean accepted = false;
 		if (auxProcessor != null) {
 			auxProcessor.addMessage(msg);
-			if (auxProcessor.isIdle()) {
+			if (auxProcessor.isIdle()) { // isIdle?????
 				auxProcessor.setIdle(false);
 				if (!msg.getHeaderValue("Purpose").equals("WaitMessage"))
 					if (removeTimer(msg.getConversationId()))
@@ -462,7 +474,9 @@ public abstract class CAgent extends BaseAgent {
 					break;
 				}
 			}
-			if (!accepted) {
+			if (!accepted && msg.getConversationId().compareTo("") != 0) {
+				pendingQueues.addMessage(msg);
+			} else if (!accepted) {
 				this.logger.info("Agent: " + this.getName()
 						+ " Message delivered to the DefaultFactory");
 				defaultFactory.startConversation(msg, null, false);

@@ -1,5 +1,6 @@
 package es.upv.dsic.gti_ia.cAgents;
 
+import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -83,6 +84,33 @@ public class CFactory {
 		return this.myCProcessor;
 	}
 
+	/**
+	 * Creates a new CProcessor that will manage the new conversation
+	 * @param msg Initial message
+	 * @param parent CProcessor that start this conversation and acts as parent
+	 * @param isSync True if it is synchronous, false otherwise
+	 * @return the new CProcessor just created
+	 */
+	protected CProcessor startConversation(Queue<ACLMessage> qMsg, CProcessor parent,
+			Boolean isSync) {
+		
+		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
+		
+		cloneProcessor.setConversationID(qMsg.peek().getConversationId());
+		for (ACLMessage msg : qMsg) {
+			cloneProcessor.addMessage(msg);
+		}
+		cloneProcessor.setIdle(false);
+		cloneProcessor.setFactory(this);
+		cloneProcessor.setParent(parent);
+		cloneProcessor.setIsSynchronized(isSync);
+		cloneProcessor.setInitiator(this.initiator);
+
+		myAgent.addProcessor(qMsg.peek().getConversationId(), cloneProcessor);
+		myAgent.exec.execute(cloneProcessor);
+		return (cloneProcessor);
+	}
+	
 	/**
 	 * Creates a new CProcessor that will manage the new conversation
 	 * @param msg Initial message
