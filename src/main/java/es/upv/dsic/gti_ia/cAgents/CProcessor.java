@@ -1069,4 +1069,11 @@ public class CProcessor implements Runnable, Cloneable {
 	public void setMaxSendingTries(int maxSendingTries) {
 		this.maxSendingTries = maxSendingTries;
 	}
+	
+	/**
+	 * (Description)
+	 */
+	public void setQueue(Queue<ACLMessage> qMsg) {
+		this.messageQueue = qMsg;
+	}
 }

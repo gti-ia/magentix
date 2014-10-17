@@ -28,13 +28,11 @@ public class HarryContractNetMultipletInitiatorClass extends CAgent {
 	public String receiveFailure;
 	public String notUnderstood;
 	public int received = 0;
-	public CountDownLatch ready;
 
 	public HarryContractNetMultipletInitiatorClass(AgentID aid,
-			CountDownLatch finished, CountDownLatch ready) throws Exception {
+			CountDownLatch finished) throws Exception {
 		super(aid);
 		this.finished = finished;
-		this.ready = ready;
 		informMsg = "";
 	}
 
@@ -217,16 +215,6 @@ public class HarryContractNetMultipletInitiatorClass extends CAgent {
 				"CONTRACTNET", filter, template, availableConversations,
 				myProcessor.getMyAgent(), participants, deadline, timeout);
 		this.addFactoryAsInitiator(contractnet);
-		
-		
-		
-		ready.countDown();
-		try {
-			ready.await();
-		} catch (InterruptedException e) {
-		
-			e.printStackTrace();
-		}
 		
 		this.startSyncConversation("CONTRACTNET");
 

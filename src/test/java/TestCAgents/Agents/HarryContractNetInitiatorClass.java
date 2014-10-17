@@ -23,7 +23,6 @@ public class HarryContractNetInitiatorClass extends CAgent {
 	// Variables for testing
 	public String informMsg;
 	private CountDownLatch finished;
-	private CountDownLatch ready;
 	public String acceptMsg;
 	public String refuseMsg;
 	private int mode;
@@ -52,11 +51,10 @@ public class HarryContractNetInitiatorClass extends CAgent {
 		this.timeOutMsg = timeOutMsg;
 	}
 
-	public HarryContractNetInitiatorClass(AgentID aid, CountDownLatch finished, CountDownLatch ready)
+	public HarryContractNetInitiatorClass(AgentID aid, CountDownLatch finished)
 			throws Exception {
 		super(aid);
 		this.finished = finished;
-		this.ready = ready;
 		informMsg = "";
 	}
 
@@ -238,15 +236,6 @@ public class HarryContractNetInitiatorClass extends CAgent {
 				"CONTRACTNET", filter, template, availableConversations,
 				myProcessor.getMyAgent(), participants, deadline, timeout);
 		this.addFactoryAsInitiator(contractnet);
-		
-		ready.countDown();
-		try {
-			ready.await();
-		} catch (InterruptedException e) {
-			
-			e.printStackTrace();
-		}
-		
 
 		this.startSyncConversation("CONTRACTNET");
 

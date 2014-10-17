@@ -2,12 +2,9 @@ package TestCAgents.Agents;
 
 import java.util.concurrent.CountDownLatch;
 
-import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
-import es.upv.dsic.gti_ia.cAgents.SendingErrorsState;
-import es.upv.dsic.gti_ia.cAgents.SendingErrorsStateMethod;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;

@@ -14,13 +14,11 @@ public class HarryRequestInitiatorClass extends CAgent {
 	// Variables for testing
 	public String informMsg;
 	private CountDownLatch finished;
-	private CountDownLatch ready;
 
-	public HarryRequestInitiatorClass(AgentID aid, CountDownLatch finished, CountDownLatch ready)
+	public HarryRequestInitiatorClass(AgentID aid, CountDownLatch finished)
 			throws Exception {
 		super(aid);
 		this.finished = finished;
-		this.ready = ready;
 		informMsg = "";
 	}
 
@@ -82,14 +80,6 @@ public class HarryRequestInitiatorClass extends CAgent {
 
 		this.addFactoryAsInitiator(talk);
 		
-		ready.countDown();
-		try {
-			ready.await();
-		} catch (InterruptedException e) {
-			
-			e.printStackTrace();
-		}
-
 		// finally the new conversation starts. Because it is synchronous,
 		// the current interaction halts until the new conversation ends.
 		// myProcessor.createSyncConversation(msg);

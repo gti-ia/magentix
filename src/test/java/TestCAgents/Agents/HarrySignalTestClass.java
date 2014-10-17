@@ -29,15 +29,12 @@ public class HarrySignalTestClass extends CAgent {
 	// Variables for testing
 	public String receivedMsg;
 	public int msgPerformative;
-	private CountDownLatch ready;
 	private CountDownLatch finished;
 	private int timeout = 0; // seconds
 
-	public HarrySignalTestClass(AgentID aid, CountDownLatch finished,
-			CountDownLatch ready) throws Exception {
+	public HarrySignalTestClass(AgentID aid, CountDownLatch finished) throws Exception {
 		super(aid);
 		this.finished = finished;
-		this.ready = ready;
 		receivedMsg = "";
 		msgPerformative = ACLMessage.PROPOSE; // Performative set to Propose by
 												// default
@@ -149,18 +146,8 @@ public class HarrySignalTestClass extends CAgent {
 
 		// /////////////////////////////////////////////////////////////////////////////
 
-		// The template processor is ready. We add the factory, in this case as
-		// a initiator one
-
 		this.addFactoryAsInitiator(talk);
-
-		ready.countDown();
-		try {
-			ready.await();
-		} catch (InterruptedException e) {
-			
-			e.printStackTrace();
-		}
+		
 		// Finally Harry starts the conversation.
 		this.startSyncConversation("TALK");
 

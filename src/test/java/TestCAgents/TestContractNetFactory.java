@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.xml.DOMConfigurator;
 import org.junit.After;
@@ -15,7 +13,6 @@ import org.junit.Test;
 import TestCAgents.Agents.HarryContractNetInitiatorClass;
 import TestCAgents.Agents.HarryContractNetMultipletInitiatorClass;
 import TestCAgents.Agents.SallyContractNetParticipantClass;
-import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
@@ -35,7 +32,6 @@ public class TestContractNetFactory {
 	
 	
 	CountDownLatch finished = new CountDownLatch(2);
-	CountDownLatch ready = new CountDownLatch(2);
 	
 	public final int ACCEPT = 0;
 	public final int REJECT = 1;
@@ -65,9 +61,9 @@ public class TestContractNetFactory {
 			 * Instantiating the CAgents
 			 */
 			Harry = new HarryContractNetInitiatorClass(new AgentID("Harry"),
-					finished, ready);
+					finished);
 			Sally = new SallyContractNetParticipantClass(new AgentID("Sally"),
-					finished, ready);
+					finished);
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -79,22 +75,21 @@ public class TestContractNetFactory {
 	public void testProtocolMultipleAgents() {
 
 		finished = new CountDownLatch(4);
-		ready = new CountDownLatch(4);
 		
 		HarryContractNetMultipletInitiatorClass HarryM = null;
 		try {
 
 			HarryM = new HarryContractNetMultipletInitiatorClass(new AgentID(
-					"HarryM"), finished, ready);
+					"HarryM"), finished);
 
 			Sally = new SallyContractNetParticipantClass(new AgentID("Sally1"),
-					finished, ready);
+					finished);
 
 			Sally2 = new SallyContractNetParticipantClass(
-					new AgentID("Sally2"), finished, ready);
+					new AgentID("Sally2"), finished);
 
 			Sally3 = new SallyContractNetParticipantClass(
-					new AgentID("Sally3"), finished, ready);
+					new AgentID("Sally3"), finished);
 
 		} catch (Exception e1) {
 			fail("Exception with multiple agents");
@@ -127,21 +122,20 @@ public class TestContractNetFactory {
 	public void testProtocolMultipleAgentsRefuse() {
 
 		finished = new CountDownLatch(4);
-		ready = new CountDownLatch(4);
 		HarryContractNetMultipletInitiatorClass HarryM = null;
 		try {
 
 			HarryM = new HarryContractNetMultipletInitiatorClass(new AgentID(
-					"HarryM"), finished, ready);
+					"HarryM"), finished);
 
 			Sally = new SallyContractNetParticipantClass(new AgentID("Sally1"),
-					finished, ready);
+					finished);
 
 			Sally2 = new SallyContractNetParticipantClass(
-					new AgentID("Sally2"), finished, ready);
+					new AgentID("Sally2"), finished);
 
 			Sally3 = new SallyContractNetParticipantClass(
-					new AgentID("Sally3"), finished, ready);
+					new AgentID("Sally3"), finished);
 
 		} catch (Exception e1) {
 			fail("Exception with multiple agents");
@@ -176,22 +170,21 @@ public class TestContractNetFactory {
 	public void testProtocolMultipleAgentsAccept() {
 
 		finished = new CountDownLatch(4);
-		ready = new CountDownLatch(4);
 		
 		HarryContractNetMultipletInitiatorClass HarryM = null;
 		try {
 
 			HarryM = new HarryContractNetMultipletInitiatorClass(new AgentID(
-					"HarryM"), finished, ready);
+					"HarryM"), finished);
 
 			Sally = new SallyContractNetParticipantClass(new AgentID("Sally1"),
-					finished, ready);
+					finished);
 
 			Sally2 = new SallyContractNetParticipantClass(
-					new AgentID("Sally2"), finished, ready);
+					new AgentID("Sally2"), finished);
 
 			Sally3 = new SallyContractNetParticipantClass(
-					new AgentID("Sally3"), finished, ready);
+					new AgentID("Sally3"), finished);
 
 		} catch (Exception e1) {
 			fail("Exception with multiple agents");

@@ -30,7 +30,6 @@ public class TestRequestFactory {
 	HarryRequestInitiatorClass Harry;
 	SallyRequestParticipantClass Sally;
 	CountDownLatch finished = new CountDownLatch(2);
-	CountDownLatch ready = new CountDownLatch(2);
 	
 	Process qpid_broker;
 	Logger logger = Logger.getLogger(TestRequestFactory.class);
@@ -57,9 +56,9 @@ public class TestRequestFactory {
 			 * Instantiating the CAgents
 			 */
 			Harry = new HarryRequestInitiatorClass(new AgentID("Harry2"),
-					finished, ready);
+					finished);
 			Sally = new SallyRequestParticipantClass(new AgentID("Sally2"),
-					finished, ready);
+					finished);
 
 		} catch (Exception e) {
 			e.printStackTrace();

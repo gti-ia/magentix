@@ -32,12 +32,10 @@ public class HarryClass extends CAgent {
 	public String receivedMsg;
 	public int msgPerformative;
 	private CountDownLatch finished;
-	private CountDownLatch ready;
 	
-	public HarryClass(AgentID aid, CountDownLatch finished, CountDownLatch ready) throws Exception {
+	public HarryClass(AgentID aid, CountDownLatch finished) throws Exception {
 		super(aid);
 		this.finished = finished;
-		this.ready = ready;
 		receivedMsg = "";
 		msgPerformative = ACLMessage.PROPOSE; // Performative set to Propose by
 												// default
@@ -146,14 +144,6 @@ public class HarryClass extends CAgent {
 		// a initiator one
 
 		this.addFactoryAsInitiator(talk);
-		
-		ready.countDown();
-		try {
-			ready.await();
-		} catch (InterruptedException e) {
-			
-			e.printStackTrace();
-		}
 
 		// Finally Harry starts the conversation.
 		this.startSyncConversation("TALK");

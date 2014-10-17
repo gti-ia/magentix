@@ -20,14 +20,11 @@ public class SallySignalTestClass extends CAgent {
 	// Variables for testing
 	public String receivedMsg;
 	public boolean notAcceptedMessageState;
-	private CountDownLatch ready;
 	private CountDownLatch finished;
 	private int timeout; // seconds
 
-	public SallySignalTestClass(AgentID aid, CountDownLatch finished,
-			CountDownLatch ready) throws Exception {
+	public SallySignalTestClass(AgentID aid, CountDownLatch finished) throws Exception {
 		super(aid);
-		this.ready = ready;
 		this.finished = finished;
 		receivedMsg = "";
 
@@ -134,13 +131,6 @@ public class SallySignalTestClass extends CAgent {
 		// with the performative set to PURPOSE will make the factory
 		// TALK to create a processor in order to manage the conversation.
 		this.addFactoryAsParticipant(talk);
-		ready.countDown();
-		try {
-			ready.await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 	}
 

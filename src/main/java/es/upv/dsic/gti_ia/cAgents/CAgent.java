@@ -65,6 +65,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -73,7 +74,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
-
 import java.util.Queue;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -116,8 +116,10 @@ public abstract class CAgent extends BaseAgent {
 														// until agent is ready
 
 	private long conversationCounter = 0;
-	private PendingQueueRepository pendingQueues = new PendingQueueRepository();
-
+	private long pendingQueueDeltaToExpire = 10 * 60 * 1000;
+	private long pendingQueueIntervalToClean = 60 * 1000;
+	private PendingQueueRepository pendingQueues = new PendingQueueRepository(pendingQueueDeltaToExpire, pendingQueueIntervalToClean);
+	
 	/**
 	 * Creates a new CAgent
 	 * 
@@ -457,7 +459,7 @@ public abstract class CAgent extends BaseAgent {
 		boolean accepted = false;
 		if (auxProcessor != null) {
 			auxProcessor.addMessage(msg);
-			if (auxProcessor.isIdle()) { // isIdle?????
+			if (auxProcessor.isIdle()) {
 				auxProcessor.setIdle(false);
 				if (!msg.getHeaderValue("Purpose").equals("WaitMessage"))
 					if (removeTimer(msg.getConversationId()))
@@ -469,7 +471,7 @@ public abstract class CAgent extends BaseAgent {
 			for (int i = 0; i < participantFactories.size(); i++) {
 				CFactory factory = participantFactories.get(i);
 				if (factory.templateIsEqual(msg)) {
-					factory.startConversation(msg, null, false);
+					factory.startConversation(createQueue(msg), null, false);
 					accepted = true;
 					break;
 				}
@@ -479,7 +481,7 @@ public abstract class CAgent extends BaseAgent {
 			} else if (!accepted) {
 				this.logger.info("Agent: " + this.getName()
 						+ " Message delivered to the DefaultFactory");
-				defaultFactory.startConversation(msg, null, false);
+				defaultFactory.startConversation(createQueue(msg), null, false);
 			}
 		}
 		this.unlock();
@@ -497,7 +499,7 @@ public abstract class CAgent extends BaseAgent {
 		ACLMessage welcomeMessage = new ACLMessage(ACLMessage.INFORM);
 		welcomeMessage.setContent("Welcome to this platform");
 		welcomeMessage.setConversationId(this.newConversationID());
-		welcomeProcessor = welcomeFactory.startConversation(welcomeMessage,
+		welcomeProcessor = welcomeFactory.startConversation(createQueue(welcomeMessage),
 				null, false);
 		try {
 			iAmFinished.await();
@@ -779,7 +781,7 @@ public abstract class CAgent extends BaseAgent {
 		this.lock();
 		for (int i = 0; i < initiatorFactories.size(); i++) {
 			if (initiatorFactories.get(i).templateIsEqual(msg)) {
-				initiatorFactories.get(i).startConversation(msg, parent, sync);
+				initiatorFactories.get(i).startConversation(createQueue(msg), parent, sync);
 				this.unlock();
 				return;
 			}
@@ -829,5 +831,59 @@ public abstract class CAgent extends BaseAgent {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Creates a queue with all messages received as function parameters
+	 * 
+	 * @param 	messages
+	 * 			List of ACLMessages that will are added to the queue
+	 * 			
+	 * @return Queue with all messages
+	 */
+	private Queue<ACLMessage> createQueue(ACLMessage ... messages){
+		Queue<ACLMessage> qMsg = new LinkedList<ACLMessage>();
+		for (ACLMessage msg : messages) {
+			qMsg.add(msg);
+		}
+		return qMsg;
+	}
+	
+	/**
+	 * Get the DeltaToExpire parameter value
+	 * 
+	 * @return DeltaToExpire
+	 */
+	public long getPendingQueueDeltaToExpire(){
+		return pendingQueues.getDeltaToExpire();
+	}
+	
+	/**
+	 * Set the DeltaToExpire parameter value
+	 * 
+	 * @param 	delta
+	 * 			Maximum time that one message is stored in pendingQueue
+	 */
+	public void setPendingQueueDeltaToExpire(long delta){
+		pendingQueues.setDeltaToExpire(delta);
+	}
+	
+	/**
+	 * Get the IntervalToClean parameter value
+	 * 
+	 * @return IntervalToClean
+	 */
+	public long getPendingQueueIntervalToClean(){
+		return pendingQueues.getIntervalToClean();
+	}
+	
+	/**
+	 * Set the IntervalToClean parameter value
+	 * 
+	 * @param 	interval
+	 * 			Minimum interval of time that the expiry of a message is checked in pendingQueue
+	 */
+	public void setPendingQueueIntervalToClean(long interval){
+		pendingQueues.setIntervalToClean(interval);
 	}
 }

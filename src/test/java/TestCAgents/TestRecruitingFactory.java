@@ -34,7 +34,6 @@ public class TestRecruitingFactory {
 	Condition HarryFinished = mutex.newCondition();
 	Condition SallyFinished = mutex.newCondition();
 	CountDownLatch finished = new CountDownLatch(2);
-	CountDownLatch ready = new CountDownLatch(3);
 
 	Logger logger = Logger.getLogger(TestRecruitingFactory.class);
 
@@ -67,10 +66,10 @@ public class TestRecruitingFactory {
 			 * Instantiating the CAgents
 			 */
 			Harry = new HarryRecruitingInitiatorClass(new AgentID("Harry"),
-					finished, ready);
+					finished);
 			Sally = new SallyRecruitingParticipantClass(new AgentID("Sally"),
-					finished, ready);
-			theOther = new OtherParticipantClass(new AgentID("other"), ready);
+					finished);
+			theOther = new OtherParticipantClass(new AgentID("other"));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -125,15 +124,10 @@ public class TestRecruitingFactory {
 	@Test(timeout = 60000)
 	public void testRefuse() {
 
-		ready = new CountDownLatch(2);
 		finished = new CountDownLatch(2);
 		
 		Sally.setFinished(finished);
 		Harry.setFinished(finished);
-		
-		Sally.setReady(ready);
-		Harry.setReady(ready);
-		
 
 		Sally.start();
 		Sally.setMode(REFUSE);

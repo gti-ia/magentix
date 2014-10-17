@@ -4,21 +4,10 @@ import java.util.concurrent.CountDownLatch;
 
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
-import es.upv.dsic.gti_ia.core.MessageFilter;
-import es.upv.dsic.gti_ia.cAgents.BeginState;
-import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
 import es.upv.dsic.gti_ia.cAgents.CProcessor;
 import es.upv.dsic.gti_ia.cAgents.CFactory;
-import es.upv.dsic.gti_ia.cAgents.FinalState;
-import es.upv.dsic.gti_ia.cAgents.FinalStateMethod;
-import es.upv.dsic.gti_ia.cAgents.ReceiveState;
-import es.upv.dsic.gti_ia.cAgents.ReceiveStateMethod;
-import es.upv.dsic.gti_ia.cAgents.SendState;
-import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
-import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_RECRUITING_Initiator;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Initiator;
 
 /**
  * Initiator factory class for the test Recruiting
@@ -32,7 +21,6 @@ public class HarryRecruitingInitiatorClass extends CAgent {
 	public String informMsg;
 	public String refuseMsg;
 	private CountDownLatch finished;
-	private CountDownLatch ready;
 	public String agreeMsg;
 	public String receivedMsgFromProxy;
 	public String failureNoMatchMsg;
@@ -69,12 +57,11 @@ public class HarryRecruitingInitiatorClass extends CAgent {
 
 	public String failureProxyMsg;
 
-	public HarryRecruitingInitiatorClass(AgentID aid, CountDownLatch finished, CountDownLatch ready)
+	public HarryRecruitingInitiatorClass(AgentID aid, CountDownLatch finished)
 			throws Exception {
 		super(aid);
 		
 		this.finished = finished;
-		this.ready = ready;
 		informMsg = "";
 	}
 
@@ -200,14 +187,6 @@ public class HarryRecruitingInitiatorClass extends CAgent {
 				null, msg, 1, this, 0);
 
 		this.addFactoryAsInitiator(recruiting);
-		
-		ready.countDown();
-		try {
-			ready.await();
-		} catch (InterruptedException e) {
-			
-			e.printStackTrace();
-		}
 
 		this.startSyncConversation("RECRUITING");
 
@@ -231,20 +210,6 @@ public class HarryRecruitingInitiatorClass extends CAgent {
 	 */
 	public void setFinished(CountDownLatch finished) {
 		this.finished = finished;
-	}
-
-	/**
-	 * @return the ready
-	 */
-	public CountDownLatch getReady() {
-		return ready;
-	}
-
-	/**
-	 * @param ready the ready to set
-	 */
-	public void setReady(CountDownLatch ready) {
-		this.ready = ready;
 	}
 
 }

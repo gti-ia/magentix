@@ -6,7 +6,6 @@ import java.util.concurrent.CountDownLatch;
 import es.upv.dsic.gti_ia.core.ACLMessage;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.MessageFilter;
-import es.upv.dsic.gti_ia.cAgents.ActionStateMethod;
 import es.upv.dsic.gti_ia.cAgents.BeginState;
 import es.upv.dsic.gti_ia.cAgents.BeginStateMethod;
 import es.upv.dsic.gti_ia.cAgents.CAgent;
@@ -20,7 +19,6 @@ import es.upv.dsic.gti_ia.cAgents.SendState;
 import es.upv.dsic.gti_ia.cAgents.SendStateMethod;
 import es.upv.dsic.gti_ia.cAgents.WaitState;
 import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_RECRUITING_Participant;
-import es.upv.dsic.gti_ia.cAgents.protocols.FIPA_REQUEST_Participant;
 
 public class SallyRecruitingParticipantClass extends CAgent {
 
@@ -29,7 +27,6 @@ public class SallyRecruitingParticipantClass extends CAgent {
 	public String refuseMsg;
 	private int mode;
 	private CountDownLatch finished;
-	private CountDownLatch ready;
 	public String agreeMsg;
 	private String receivedMsgFromOther;
 	public boolean resultOfSubprotocol;
@@ -47,11 +44,10 @@ public class SallyRecruitingParticipantClass extends CAgent {
 
 
 
-	public SallyRecruitingParticipantClass(AgentID aid, CountDownLatch finished, CountDownLatch ready)
+	public SallyRecruitingParticipantClass(AgentID aid, CountDownLatch finished)
 			throws Exception {
 		super(aid);
 		this.finished = finished;
-		this.ready = ready;
 		acceptRequests = false;// False until the CFactory gets to the
 								// doReceiveRequestMethod
 	}
@@ -331,14 +327,6 @@ public class SallyRecruitingParticipantClass extends CAgent {
 		// a initiator one
 
 		this.addFactoryAsInitiator(talk);
-		
-		ready.countDown();
-		try {
-			ready.await();
-		} catch (InterruptedException e) {
-			
-			e.printStackTrace();
-		}
 
 	}
 
@@ -450,19 +438,5 @@ public class SallyRecruitingParticipantClass extends CAgent {
 	 */
 	public void setFinished(CountDownLatch finished) {
 		this.finished = finished;
-	}
-
-	/**
-	 * @return the ready
-	 */
-	public CountDownLatch getReady() {
-		return ready;
-	}
-
-	/**
-	 * @param ready the ready to set
-	 */
-	public void setReady(CountDownLatch ready) {
-		this.ready = ready;
 	}
 }

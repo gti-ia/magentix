@@ -80,6 +80,7 @@ public class JasonAgent extends CAgent{
 	
 	/**
 	 * Creates a different default factory adapted to the Jason's reasoning cycle
+	 * (only no IDmessages)
 	 */
 	protected final void createDefaultFactory(final CAgent me){
 		this.defaultFactory = new CFactory("DefaultFactory",null, 1,this);
@@ -107,5 +108,17 @@ public class JasonAgent extends CAgent{
 		FINAL.setMethod(new F_Method());
 		defaultFactory.cProcessorTemplate().registerState(FINAL);
 		defaultFactory.cProcessorTemplate().addTransition(BEGIN, FINAL);
+	}
+	
+	/**
+	 * OnMessage overridden to pass the messages to JasonAgent reasoning cycle
+	 * 
+	 * @param	msg
+	 * 			Message received by a agent
+	 */
+	@Override
+	public void onMessage(ACLMessage msg) {
+		super.onMessage(msg);
+		agArch.addMessage(msg);
 	}
 }

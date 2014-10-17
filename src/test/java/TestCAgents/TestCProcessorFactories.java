@@ -14,7 +14,6 @@ import TestCAgents.Agents.HarryClass;
 import TestCAgents.Agents.SallyClass;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
-import es.upv.dsic.gti_ia.core.BaseAgent;
 
 /**
  * Test class for CProcessor Factories based on the example
@@ -31,7 +30,6 @@ public class TestCProcessorFactories {
 	SallyClass Sally;
 	Process qpid_broker;
 	CountDownLatch finished = new CountDownLatch(2);
-	CountDownLatch ready = new CountDownLatch(2);
 	
 	Logger logger = Logger.getLogger(TestCProcessorFactories.class);
 
@@ -55,8 +53,8 @@ public class TestCProcessorFactories {
 			/**
 			 * Instantiating the CAgents
 			 */
-			Harry = new HarryClass(new AgentID("Harry"), finished, ready);
-			Sally = new SallyClass(new AgentID("Sally"), finished, ready);
+			Harry = new HarryClass(new AgentID("Harry"), finished);
+			Sally = new SallyClass(new AgentID("Sally"), finished);
 
 		} catch (Exception e) {
 			e.printStackTrace();

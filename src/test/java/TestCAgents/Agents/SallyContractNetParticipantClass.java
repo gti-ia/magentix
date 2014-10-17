@@ -23,7 +23,6 @@ public class SallyContractNetParticipantClass extends CAgent {
 	public String proposal;
 	public String informMsg;
 	private CountDownLatch finished;
-	private CountDownLatch ready;
 	public String refuseMsg;
 	public String rejectMsg;
 	public boolean FAIL = false;
@@ -32,11 +31,10 @@ public class SallyContractNetParticipantClass extends CAgent {
 	public String acceptMsg;
 	public String timeOutMsg;
 
-	public SallyContractNetParticipantClass(AgentID aid, CountDownLatch finished, CountDownLatch ready)
+	public SallyContractNetParticipantClass(AgentID aid, CountDownLatch finished)
 			throws Exception {
 		super(aid);
 		this.finished = finished;
-		this.ready = ready;
 		acceptRequests = false;
 	}
 
@@ -219,15 +217,6 @@ public class SallyContractNetParticipantClass extends CAgent {
 
 		this.addFactoryAsParticipant(contractnet);
 		
-		ready.countDown();
-		try {
-			ready.await();
-		} catch (InterruptedException e) {
-			
-			e.printStackTrace();
-		}
-		
-
 	}
 
 	protected void finalize(CProcessor firstProcessor,

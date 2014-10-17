@@ -86,7 +86,7 @@ public class CFactory {
 
 	/**
 	 * Creates a new CProcessor that will manage the new conversation
-	 * @param msg Initial message
+	 * @param qMsg Queue of initial messages
 	 * @param parent CProcessor that start this conversation and acts as parent
 	 * @param isSync True if it is synchronous, false otherwise
 	 * @return the new CProcessor just created
@@ -97,9 +97,7 @@ public class CFactory {
 		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
 		
 		cloneProcessor.setConversationID(qMsg.peek().getConversationId());
-		for (ACLMessage msg : qMsg) {
-			cloneProcessor.addMessage(msg);
-		}
+		cloneProcessor.setQueue(qMsg);
 		cloneProcessor.setIdle(false);
 		cloneProcessor.setFactory(this);
 		cloneProcessor.setParent(parent);
@@ -107,32 +105,6 @@ public class CFactory {
 		cloneProcessor.setInitiator(this.initiator);
 
 		myAgent.addProcessor(qMsg.peek().getConversationId(), cloneProcessor);
-		myAgent.exec.execute(cloneProcessor);
-		return (cloneProcessor);
-	}
-	
-	/**
-	 * Creates a new CProcessor that will manage the new conversation
-	 * @param msg Initial message
-	 * @param parent CProcessor that start this conversation and acts as parent
-	 * @param isSync True if it is synchronous, false otherwise
-	 * @return the new CProcessor just created
-	 */
-	protected CProcessor startConversation(ACLMessage msg, CProcessor parent,
-			Boolean isSync) {
-		
-		CProcessor cloneProcessor = (CProcessor) myCProcessor.clone();
-		
-		cloneProcessor.setConversationID(msg.getConversationId());
-		cloneProcessor.addMessage(msg);
-		cloneProcessor.setIdle(false);
-		cloneProcessor.setFactory(this);
-		cloneProcessor.setParent(parent);
-		cloneProcessor.setIsSynchronized(isSync);
-		cloneProcessor.setInitiator(this.initiator);
-		// setParentChildren(cloneProcessor); // ???
-
-		myAgent.addProcessor(msg.getConversationId(), cloneProcessor);
 		myAgent.exec.execute(cloneProcessor);
 		return (cloneProcessor);
 	}

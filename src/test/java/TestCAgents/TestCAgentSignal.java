@@ -10,9 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import TestCAgents.Agents.HarryClass;
 import TestCAgents.Agents.HarrySignalTestClass;
-import TestCAgents.Agents.SallyClass;
 import TestCAgents.Agents.SallySignalTestClass;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
@@ -31,8 +29,6 @@ public class TestCAgentSignal {
 	HarrySignalTestClass Harry;
 	SallySignalTestClass Sally;
 	Process qpid_broker;
-
-	CountDownLatch ready = new CountDownLatch(2);
 	
 	CountDownLatch finished = new CountDownLatch(2);
 	
@@ -58,8 +54,8 @@ public class TestCAgentSignal {
 			/**
 			 * Instantiating the CAgents
 			 */
-			Harry = new HarrySignalTestClass(new AgentID("Harry"), finished, ready);
-			Sally = new SallySignalTestClass(new AgentID("Sally"), finished, ready);
+			Harry = new HarrySignalTestClass(new AgentID("Harry"), finished);
+			Sally = new SallySignalTestClass(new AgentID("Sally"), finished);
 
 		} catch (Exception e) {
 			e.printStackTrace();

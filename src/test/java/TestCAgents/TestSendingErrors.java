@@ -1,11 +1,8 @@
 package TestCAgents;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.fail;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -15,7 +12,6 @@ import org.junit.Test;
 
 import TestCAgents.Agents.HarrySendingErrorsClass;
 import TestCAgents.Agents.SallyClass;
-import TestCAgents.Agents.SallyContractNetParticipantClass;
 import es.upv.dsic.gti_ia.core.AgentID;
 import es.upv.dsic.gti_ia.core.AgentsConnection;
 
@@ -33,7 +29,6 @@ public class TestSendingErrors {
 	SallyClass Sally;
 
 	CountDownLatch finished;
-	CountDownLatch ready = new CountDownLatch(1);
 
 	Logger logger = Logger.getLogger(TestSendingErrors.class);
 
@@ -114,7 +109,7 @@ public class TestSendingErrors {
 			 */
 			AgentsConnection.connect();
 
-			Sally = new SallyClass(new AgentID("Sally"), finished, ready);
+			Sally = new SallyClass(new AgentID("Sally"), finished);
 
 		} catch (Exception e) {
 			e.printStackTrace();
