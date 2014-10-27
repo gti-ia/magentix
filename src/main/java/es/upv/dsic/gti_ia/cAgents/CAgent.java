@@ -174,7 +174,6 @@ public abstract class CAgent extends BaseAgent {
 		if (goodQueues.size() > 0) {
 			for (QueueWithTimestamp qwt : goodQueues) {
 				Queue<ACLMessage> q = qwt.getQueue();
-				//processors.put(q.first().getConversationId(), new CProcessor(this, q));
 				factory.startConversation(q, null, false);
 			}
 		}

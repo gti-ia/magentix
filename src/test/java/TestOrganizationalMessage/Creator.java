@@ -224,7 +224,7 @@ public class Creator extends CAgent {
 
 			try{
 
-				omsProxy.joinUnit("External", "Calculator");
+				omsProxy.joinUnit("ExternalUnit", "Calculator");
 
 				boolean searching = true;
 				do{
@@ -259,11 +259,11 @@ public class Creator extends CAgent {
 				{
 					m.waiting(3 * 1000);
 
-					members = omsProxy.informMembers("External", "manager", "");
+					members = omsProxy.informMembers("ExternalUnit", "manager", "");
 				}while(members.contains("Noisy"));
 
 
-				omsProxy.deregisterUnit("External");
+				omsProxy.deregisterUnit("ExternalUnit");
 
 
 				omsProxy.deregisterUnit("Calculator");

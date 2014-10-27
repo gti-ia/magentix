@@ -27,15 +27,19 @@ public class CFactory {
 	int limit;
 	private boolean initiator = false;
 
-	// private ArrayList<String> children; // ??? Necesario?
-
 	/**
 	 * Constructor of the class
-	 * @param name of the CFactory
-	 * @param filter message filter that specifies which type of
-	 * messages can start new conversations
-	 * @param conversationLimit how many conversations can a CFactory manage simultaneously
-	 * @param myAgent the agent owner of this factory
+	 * 
+	 * @param name 		
+	 * 					Name of the CFactory
+	 * @param filter	
+	 * 					Message filter that specifies which type of messages can
+	 * 					start new conversations. If this is null imply that all
+	 * 					messages are accepted.
+	 * @param conversationLimit
+	 * 					How many conversations can a CFactory manage simultaneously
+	 * @param myAgent 	
+	 * 					The agent owner of this factory
 	 */
 	public CFactory(String name, MessageFilter filter,
 			int conversationsLimit, CAgent myAgent) {
@@ -45,7 +49,6 @@ public class CFactory {
 		this.limit = conversationsLimit;
 		this.myAgent = myAgent;
 		this.myCProcessor = new CProcessor(this.myAgent);
-		// children = new ArrayList<String>();
 	}
 
 	/**
@@ -67,11 +70,15 @@ public class CFactory {
 	}
 
 	/**
-	 * Returns this CFactory's message filter
-	 * @return the message filter that will make this CFactory to start new CProcessors
+	 * Returns this CFactory's message filter 
+	 * @return the message filter that will make this CFactory to start new CProcessors. It can be null.
 	 */
 	public MessageFilter getFilter() {
-		return (MessageFilter) filter.clone();
+		try {
+			return (MessageFilter) filter.clone();
+		}catch(Exception e){
+			return null;
+		}
 	}
 
 	/**

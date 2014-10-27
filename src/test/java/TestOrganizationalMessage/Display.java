@@ -189,7 +189,7 @@ public class Display extends CAgent {
 			try {
 
 
-				ArrayList<String> result = omsProxy.informUnit("External");
+				ArrayList<String> result = omsProxy.informUnit("ExternalUnit");
 
 				System.out.println("---------------------");
 				System.out.println("unit external");

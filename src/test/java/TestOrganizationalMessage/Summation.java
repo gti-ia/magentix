@@ -111,19 +111,11 @@ public class Summation extends CAgent {
 			talk.cProcessorTemplate().addTransition(REQUEST, FINAL);
 			talk.cProcessorTemplate().addTransition(RECEIVE, FINAL);
 
-			
-
-
 
 			this.addFactoryAsParticipant(talk_Manager);
 			this.addFactoryAsInitiator(talk);
 
-
 			this.startSyncConversation("SUMMATION_REQUEST");
-
-
-
-
 
 		} catch (THOMASException e) {
 			// TODO Auto-generated catch block

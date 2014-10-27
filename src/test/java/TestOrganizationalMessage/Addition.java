@@ -37,8 +37,6 @@ public class Addition extends CAgent {
 
 	protected void execution(CProcessor firstProcessor, ACLMessage welcomeMessage) {
 
-
-
 		try
 		{
 
@@ -106,17 +104,7 @@ public class Addition extends CAgent {
 			additionTalk.cProcessorTemplate().addTransition(SEND_RESULT, FINAL);
 			
 
-
-
-			
-
-
-
 			this.addFactoryAsParticipant(additionTalk);
-
-
-
-
 
 		}catch(THOMASException e)
 		{

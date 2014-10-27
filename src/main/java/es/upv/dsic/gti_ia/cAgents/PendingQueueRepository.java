@@ -47,7 +47,7 @@ public class PendingQueueRepository {
 		ArrayList<QueueWithTimestamp> queuesWithTimestamp = new ArrayList<QueueWithTimestamp>(
 				queueMap.values());
 		for (QueueWithTimestamp theQueue : queuesWithTimestamp) {
-			if (template.compareHeaders(theQueue.getQueue().peek())) {
+			if (template == null || template.compareHeaders(theQueue.getQueue().peek())) {
 				return true;
 			}
 		}
@@ -60,7 +60,7 @@ public class PendingQueueRepository {
 		ArrayList<QueueWithTimestamp> matchingQueues = new ArrayList<QueueWithTimestamp>();
 
 		for (QueueWithTimestamp theQueue : queuesWithTimestamp) {
-			if (template.compareHeaders(theQueue.getQueue().peek())) {
+			if (template == null || template.compareHeaders(theQueue.getQueue().peek())) {
 				matchingQueues.add(theQueue);
 			}
 		}

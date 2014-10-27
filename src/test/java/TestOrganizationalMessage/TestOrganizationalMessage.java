@@ -72,7 +72,7 @@ public class TestOrganizationalMessage {
 		 * Instantiating agents
 		 */
 
-		iniAgent = new Creator(new AgentID("Creator"));
+		iniAgent = new Creator(new AgentID("CreatorAgent"));
 		ruiAgent = new Noisy(new AgentID("Noisy"));
 
 		sumAgent = new Addition(new AgentID("Addition"));
@@ -95,7 +95,7 @@ public class TestOrganizationalMessage {
 
 	}
 	
-	@Test(timeout = 26 * 1000)
+	@Test(timeout = 5 * 60 * 1000)
 	public void testThomas() {
 
 		assertNotNull(iniAgent);
