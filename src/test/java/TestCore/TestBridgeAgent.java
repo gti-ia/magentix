@@ -143,8 +143,31 @@ public class TestBridgeAgent {
 				+ ":protocol http\r\n" + ":conversation-id 1\r\n)"
 				+ "--251D738450A171593A1583EB--";
 
+
 		String expected = "";
 		try {
+			String expected_payload = 
+					  "(INFORM\r\n"
+					+ " :sender "
+					+ "( agent-identifier"
+					+ " :name \"sender@"
+					+ InetAddress.getLocalHost().getHostName()
+					+ ":"
+					+ BridgeAgentOutIn.getHttp_port()
+					+ "\""
+					+ " :addresses (sequence http://"
+					+ InetAddress.getLocalHost().getCanonicalHostName()
+					+ ":"
+					+ BridgeAgentOutIn.getHttp_port()
+					+ " ))\r\n"
+					+ " :receiver (set ( agent-identifier :name \"receiver\""
+					+ " :addresses (sequence qpid://localhost:8081 )) )\r\n"
+					+ " :content "
+					+ "\"((done task1))\""
+					+ "\r\n"
+					+ " :protocol \"http\"\r\n"
+					+ " :conversation-id 1\r\n )"; 
+
 			expected = "POST qpid://localhost:8081 HTTP/1.1\r\n"
 					+ "Cache-Control: no-cache\r\n"
 					+ "Mime-Version: 1.0\r\n"
@@ -170,7 +193,7 @@ public class TestBridgeAgent {
 					+ "</agent-identifier>"
 					+ "</from>"
 					+ "<acl-representation>fipa.acl.rep.string.std</acl-representation>"
-					+ "<payload-length>281</payload-length>"
+					+ "<payload-length>" + expected_payload.length() + "</payload-length>"
 					+ "<date></date>"
 					+ "<intended-receiver><agent-identifier><name>receiver</name><addresses><url>qpid://localhost:8081</url></addresses></agent-identifier></intended-receiver>"
 					+ "</params>"
@@ -178,26 +201,8 @@ public class TestBridgeAgent {
 					+ "--a36869921a26b9d812878a42b8fc2cd\r\n"
 					+ "Content-Type: application/text\r\n"
 					+ "\r\n"
-					+ "(INFORM\r\n"
-					+ " :sender "
-					+ "( agent-identifier"
-					+ " :name \"sender@"
-					+ InetAddress.getLocalHost().getHostName()
-					+ ":"
-					+ BridgeAgentOutIn.getHttp_port()
-					+ "\""
-					+ " :addresses (sequence http://"
-					+ InetAddress.getLocalHost().getCanonicalHostName()
-					+ ":"
-					+ BridgeAgentOutIn.getHttp_port()
-					+ " ))\r\n"
-					+ " :receiver (set ( agent-identifier :name \"receiver\""
-					+ " :addresses (sequence qpid://localhost:8081 )) )\r\n"
-					+ " :content "
-					+ "\"((done task1))\""
+					+ expected_payload
 					+ "\r\n"
-					+ " :protocol \"http\"\r\n"
-					+ " :conversation-id 1\r\n )\r\n"
 					+ "--a36869921a26b9d812878a42b8fc2cd--\r\n\r\n\r\n";
 		} catch (UnknownHostException e2) {
 			// TODO Auto-generated catch block

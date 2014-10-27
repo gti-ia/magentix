@@ -12,6 +12,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+//import org.apache.log4j.Level;
+
 import es.upv.dsic.gti_ia.organization.Configuration;
 
 /**
@@ -111,6 +113,7 @@ public class BridgeAgentOutIn extends BaseAgent {
 			try {
 
 				InputStream is;
+				//logger.getRootLogger().setLevel(Level.DEBUG);
 				logger.info("BridgeAgentOutIn waiting receive external FIPA-Messages");
 
 				s = socket.accept(); // Socket Cliente
