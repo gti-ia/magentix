@@ -107,6 +107,8 @@ public class TestTrace3 {
 		 */
 		tm.start();
 		observer.start();
+		//Wait to Observer finalize their initialization.
+		end.acquire(1);
 		publisher.start();
 		subscriber.start();
 		coordinator.start();

@@ -147,8 +147,8 @@ public class TestTraceDaddy {
 			controlChildren.add(msg.getSender() + " " + msg.getPerformative() + ": "+ msg.getContent());
 		}
 		
-		assertEquals(Collections.frequency(controlChildren, youngerSon.getAid() + " REQUEST: Give me your toy..."), 5);
-		assertEquals(Collections.frequency(controlChildren, olderSon.getAid() + " REFUSE: NO!"), 5);
+		assertTrue(Collections.frequency(controlChildren, youngerSon.getAid() + " REQUEST: Give me your toy...") >= 5);
+		assertTrue(Collections.frequency(controlChildren, olderSon.getAid() + " REFUSE: NO!") >= 5);
 		assertTrue(controlChildren.contains(youngerSon.getAid() + " REQUEST: GUAAAAAA..!"));
 		
 		controlChildren.clear();

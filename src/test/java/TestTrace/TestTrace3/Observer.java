@@ -67,6 +67,7 @@ public class Observer extends BaseAgent {
 		TraceInteract.cancelTracingServiceSubscription(this, "MESSAGE_SENT");
 		TraceInteract.cancelTracingServiceSubscription(this, "MESSAGE_RECEIVED");
 		
+		TestTrace3.end.acquire();
 	}
 
 	public void execute(){

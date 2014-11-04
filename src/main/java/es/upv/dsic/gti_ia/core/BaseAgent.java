@@ -1003,7 +1003,7 @@ public class BaseAgent implements Runnable {
 		send(msg);
 
 		int accumulatedTime = 0;
-		int defaultTimeOut = 200;
+		int defaultTimeOut = 2000;
 		String messageId = msg.getConversationId();
 
 		traceMaskUpdated.add(messageId);
