@@ -15,9 +15,33 @@
 
 \subsection{BaseAgent}\label{sec:BaseAgent}
 
-In order to create a basic Magentix2 agent, it is necessary to define a class which extends the class:\\ \lstinline|es.upv.dsic.gti_ia.core.BaseAgent|. A unique identifier (with a new instance of AgentID class) must be associated to the agent and it is also necessary to  implement the logic of the agent in the \lstinline|execute()| method.
+In order to create a basic Magentix2 agent, it is necessary to define a class which extends the class:\\ \lstinline|es.upv.dsic.gti_ia.core.BaseAgent|.
 
-The following code shows how to implement a new BaseAgent class named SenderAgent. This agent only shows its name by the screen:
+The logic of the agent should be implemented overriding three methods:
+\begin{itemize}
+\item \lstinline|init()|: it is used to add instructions that should be executed at the  beginning of the agent's execution, if it is needed.
+\item \lstinline|execute()|: it must contain the main logic of the agent.
+\item \lstinline|finalize()|: it is used to add instructions that should be executed at the  end of the agent's execution, if it is needed.
+\end{itemize}
+
+
+A unique identifier (with a new instance of \lstinline|AgentID| class) must be associated to the agent when it is created: 
+\begin{lstlisting}
+ /* SenderAgent  extends BaseAgent */
+ SenderAgent agent = new SenderAgent(new AgentID(
+        "qpid://emisor@localhost:8080"));
+\end{lstlisting}		
+
+In order to start the agent's execution, is only needed to call the \lstinline|start()| method, which causes the execution of the agent's logic flow:
+\begin{lstlisting}
+	init();
+	execute();
+	finalize(); 
+\end{lstlisting}	
+
+Thus, the methods \lstinline|init()|, \lstinline|execute()| and  \lstinline|finalize()| should not be called directly. Furthermore, notice that agents should finalize in an ordered way. If its execution is interrupted or aborted, they do not disconnect from the Qpid broker and this could provoke errors later.
+
+The following code shows how to implement a new \lstinline|BaseAgent| class named \lstinline|SenderAgent|. This agent only shows its name by the screen:
 
 \begin{lstlisting}
 import es.upv.dsic.gti_ia.core.ACLMessage;
@@ -32,18 +56,32 @@ public class SenderAgent extends BaseAgent {
 
   public void execute() {
 	System.out.println("Executing, I'm " + getName());
-
   }
 
 }
 \end{lstlisting}
 
+Furthermore, the following source code creates and runs an agent of the class \lstinline|SenderAgent| ( which extends \lstinline|BaseAgent|):
+\begin{lstlisting}
+
+ // Connecting to Qpid Broker
+ AgentsConnection.connect();
+
+ //Instantiating a sender agent
+ SenderAgent myAgent = new SenderAgent(new AgentID(
+                       "qpid://emisor@localhost:8080"));
+ // Execute the agent
+ myAgent.start();
+
+\end{lstlisting}
+
 \subsection{SimpleAgent}\label{sec:SimpleAgent}
-In order to create a simple Magentix2 agent, it is required to define a class which extends the class: \lstinline|es.upv.dsic.gti_ia.core.SingleAgent|. It is a extended class from BaseAgent.
+In order to create a simple Magentix2 agent, it is required to define a class which extends the class: \lstinline|es.upv.dsic.gti_ia.core.SingleAgent|. It is a extended class from \lstinline| BaseAgent|. 
 
-The SingleAgent defines a new message reception method (receiveACLMessage()) that performs blocking reception. It receives a new message in blocked mode. Then, when the agent retrieves the message, it is removed form the head of the agent's message queue.
+The \lstinline|SingleAgent| defines a new message reception method (\lstinline|receiveACLMessage()|) that performs blocking reception. It receives a new message in blocked mode. Then, when the agent retrieves the message, it is removed form the head of the agent's message queue. Thus, how to program a \lstinline|SingleAgent| is the same as set the \lstinline|BaseAgent|, but now you have a reception method.
 
-The following code shows how to implement a new singleAgent with the receiveACLMessage() method:
+
+The following code shows how to implement a new \lstinline|singleAgent| with the receiveACLMessage() method:
 \begin{lstlisting}
 public void execute() {
   /**
