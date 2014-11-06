@@ -1082,16 +1082,15 @@ public class BaseAgent implements Runnable {
 
 	}
 
+
 	/**
-	 * The trace system is notified when the agent is about to disappear, in
-	 * this method.
+	 * Define activities such as finalizing resources, and every task
+	 * necessary after execution of execute procedure. It is executed when
+	 * the agent finalizes and may be overriden by the user.
 	 */
+
 	public void finalize() {
-		/*
-		sendSystemTraceEvent(new TraceEvent(
-				TracingService.DI_TracingServices[TracingService.AGENT_DESTROYED]
-						.getName(), new AgentID("system", aid.protocol,
-						aid.host, aid.port), aid.toString()));*/
+	
 	}
 
 	/**
@@ -1196,7 +1195,10 @@ public class BaseAgent implements Runnable {
 	}
 
 	/**
-	 * Function that will be executed when the agent terminates
+	 * Function that will be executed when the agent terminates. 
+	 * 
+	 * The trace system is notified when the agent is about to disappear. 
+	 * Also the connection with Qpid is closed.
 	 */
 	protected void terminate() {
 		sendSystemTraceEvent(new TraceEvent(
