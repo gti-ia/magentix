@@ -3,6 +3,7 @@ package TestCore;
 import java.util.Date;
 
 import com.ibm.icu.util.Calendar;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,7 +15,7 @@ import es.upv.dsic.gti_ia.core.ISO8601;
  * @author David Fernández - dfernandez@dsic.upv.es
  */
 
-public class TestISO8601{
+public class TestISO8601 {
 	
 	/**
 	 * Testing method toDate(String)
@@ -22,7 +23,7 @@ public class TestISO8601{
 	 * With an UTC Date format
 	 * 
 	 */
-	@Test
+	@Test(timeout=50000)
 	public void testToDateUTC(){
 		String utcStringDate = "20130730T191940000Z"; //000 = milliseconds
 		
@@ -50,7 +51,7 @@ public class TestISO8601{
 	 * With an local Date format
 	 * 
 	 */
-	@Test
+	@Test(timeout=50000)
 	public void testToDateLocal(){
 		String localStringDate = "20130730T191940000"; //000 = milliseconds
 		
@@ -76,18 +77,16 @@ public class TestISO8601{
 	 * With a NULL date
 	 * 
 	 */
-	@Test
+	@Test(timeout=50000)
 	public void testToDateNULL(){
-		String utcStringDate = null; //000 = milliseconds
-		
-
+		String utcStringDate = null;
 		
 		Date javaDate = new Date();		
 		Date parsedJavaDate;
 		
 		try {
 			parsedJavaDate = ISO8601.toDate(utcStringDate);
-			assertEquals(javaDate, parsedJavaDate);
+			assertTrue( Math.abs(javaDate.getTime() - parsedJavaDate.getTime()) < 10000 );
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,7 +101,7 @@ public class TestISO8601{
 	 * Test with negative and positive relative date
 	 * 
 	 */
-	@Test
+	@Test(timeout=50000)
 	public void testToDateRelative(){
 		//Test with positive relative date
 		String relativeStringDate = "+00000000T010000000"; //1 hour from now
@@ -114,7 +113,7 @@ public class TestISO8601{
 		
 		try {
 			parsedJavaDate = ISO8601.toDate(relativeStringDate);
-			assertEquals(javaDate.toString(), parsedJavaDate.toString());
+			assertTrue( Math.abs(javaDate.getTime() - parsedJavaDate.getTime()) < 10000 );
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -130,7 +129,7 @@ public class TestISO8601{
 		
 		try {
 			parsedJavaDate = ISO8601.toDate(relativeStringDate);
-			assertEquals(javaDate.toString(), parsedJavaDate.toString());
+			assertTrue( Math.abs(javaDate.getTime() - parsedJavaDate.getTime()) < 10000 );
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -144,7 +143,7 @@ public class TestISO8601{
 	 * Date to UTC String
 	 * 
 	 */
-	@Test
+	@Test(timeout=50000)
 	public void testUTCToString(){
 		String utcStringDate = "20130730T191940000Z"; //000 = milliseconds
 		
@@ -173,7 +172,7 @@ public class TestISO8601{
 	 * Date to local String
 	 * 
 	 */
-	@Test
+	@Test(timeout=50000)
 	public void testLocalToString(){
 		String localStringDate = "20130730T191940000"; //000 = milliseconds
 		
@@ -198,7 +197,7 @@ public class TestISO8601{
 	 * date format can not be chosen, is always UTC
 	 * 
 	 */
-	@Test
+	@Test(timeout=50000)
 	public void testToString(){
 		String utcStringDate = "20130730T191940000Z"; //000 = milliseconds
 		
@@ -227,7 +226,7 @@ public class TestISO8601{
 	 * Test with negative and positive milliseconds
 	 * 
 	 */
-	@Test
+	@Test(timeout=50000)
 	public void testToRelativeTimeString(){
 		//Test with positive milliseconds
 		String relativeStringDate = "+00000000T010000000"; //1 hour from now
