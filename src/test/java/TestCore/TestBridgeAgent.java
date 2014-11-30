@@ -8,7 +8,6 @@ import java.io.DataOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,9 +16,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Semaphore;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +37,7 @@ public class TestBridgeAgent {
 	SenderAgent sender = null;
 	SmallHttpServer shs = null;
     CountDownLatch cdl = null;
+    private int port = 8082;
 
 	/** Test set up */
 	@Before
@@ -68,7 +66,7 @@ public class TestBridgeAgent {
 		try {
 
 			baio = new BridgeAgentInOut(new AgentID("baio"));
-			baoi = new BridgeAgentOutIn(new AgentID("baoi"), 8082);
+			baoi = new BridgeAgentOutIn(new AgentID("baoi"), port++);
 			consumer = new ConsumerAgent(new AgentID("receiver"));
 			sender = new SenderAgent(new AgentID("sender"));
 			cdl = new CountDownLatch(1);
@@ -116,7 +114,7 @@ public class TestBridgeAgent {
 				+ "<agent-identifier>"
 				+ "<name>sender</name>"
 				+ "<addresses>"
-				+ "<url>http://localhost:8082</url>"
+				+ "<url>http://localhost:"+ BridgeAgentOutIn.getHttp_port() +"</url>"
 				+ "</addresses>"
 				+ "</agent-identifier>"
 				+ "</from>"
@@ -185,10 +183,10 @@ public class TestBridgeAgent {
 					+ "<url>qpid://localhost:8081</url>" + "</addresses>"
 					+ "</agent-identifier>" + "</to>" + "<from>"
 					+ "<agent-identifier>"
-					+ "<name>sender@localhost:8082</name>" + "<addresses>"
+					+ "<name>sender@localhost:"+ BridgeAgentOutIn.getHttp_port() +"</name>" + "<addresses>"
 					+ "<url>http://"
 					+ InetAddress.getLocalHost().getCanonicalHostName()
-					+ ":8082</url>"
+					+ ":"+ BridgeAgentOutIn.getHttp_port() +"</url>"
 					+ "</addresses>"
 					+ "</agent-identifier>"
 					+ "</from>"
@@ -257,7 +255,7 @@ public class TestBridgeAgent {
 				+ "<addresses>"
 				+ "<url>http://"
 				+ InetAddress.getLocalHost().getCanonicalHostName()
-				+ ":8082</url>"
+				+ ":"+ BridgeAgentOutIn.getHttp_port() +"</url>"
 				+ "</addresses>"
 				+ "</agent-identifier>"
 				+ "</to>"
@@ -267,7 +265,7 @@ public class TestBridgeAgent {
 				+ "<addresses>"
 				+ "<url>http://"
 				+ InetAddress.getLocalHost().getCanonicalHostName()
-				+ ":8082</url>"
+				+ ":"+ BridgeAgentOutIn.getHttp_port() +"</url>"
 				+ "</addresses>"
 				+ "</agent-identifier>"
 				+ "</from>"
@@ -307,7 +305,7 @@ public class TestBridgeAgent {
 		consumer.start();
 
 		try {
-			connection = sendRequest(connection, message);
+			connection = sendRequest(connection, message, BridgeAgentOutIn.getHttp_port());
 
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -350,7 +348,7 @@ public class TestBridgeAgent {
 				+ "<addresses>"
 				+ "<url>http://"
 				+ InetAddress.getLocalHost().getCanonicalHostName()
-				+ ":8082</url>"
+				+ ":"+ BridgeAgentOutIn.getHttp_port() +"</url>"
 				+ "</addresses>"
 				+ "</agent-identifier>"
 				+ "</to>"
@@ -360,7 +358,7 @@ public class TestBridgeAgent {
 				+ "<addresses>"
 				+ "<url>http://"
 				+ InetAddress.getLocalHost().getCanonicalHostName()
-				+ ":8082</url>"
+				+ ":"+ BridgeAgentOutIn.getHttp_port() +"</url>"
 				+ "</addresses>"
 				+ "</agent-identifier>"
 				+ "</from>"
@@ -402,7 +400,7 @@ public class TestBridgeAgent {
 		consumer.start();
 
 		try {
-			connection = sendRequest(connection, message);
+			connection = sendRequest(connection, message, BridgeAgentOutIn.getHttp_port());
 
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -447,11 +445,11 @@ public class TestBridgeAgent {
 	 * Auxiliar Methods
 	 */
 	private HttpURLConnection sendRequest(HttpURLConnection connection,
-			String message) throws IOException {
+			String message, int outPort) throws IOException {
 		/*
 		 * Generates the request
 		 */
-		URL url = new URL("http://localhost:8082/acc");
+		URL url = new URL("http://localhost:"+ outPort +"/acc");
 		connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");
 		// connection.setUseCaches(false);
