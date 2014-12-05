@@ -33,7 +33,6 @@ def which(program):
 nodoc = "-nodoc" in sys.argv
 nomvn = "-nomvn" in sys.argv
 nosrc = "-nosrc" in sys.argv
-noexport = "-noexport" in sys.argv
 nozip = "-nozip" in sys.argv
 
 #try:
@@ -45,7 +44,6 @@ from xml.etree.ElementTree import ElementTree
 release = ElementTree(file=".."+os.sep+"pom.xml").findtext("{http://maven.apache.org/POM/4.0.0}version")
 
 
-shutil.rmtree("magentix2-export",ignore_errors=True)
 releasedir = "magentix2-"+str(release)
 shutil.rmtree(releasedir,ignore_errors=True)
 for f in glob.glob(releasedir+"*.zip"):
@@ -73,12 +71,6 @@ if sys.platform=="win32":
 	shutil.copy("dist"+os.sep+"magentix-setup.exe", "magentix2")
 
 orig = "magentix2"
-if not noexport:
-    if which("svn") != None:
-    	os.system("svn export magentix2 magentix2-export")
-    	orig = "magentix2-export"
-    else:
-    	print "WARNING: could not export svn!"
 
 #zip sources
 if not nosrc:
@@ -162,7 +154,6 @@ if not nozip:
     zipdir(releasedir, releasedir)
     shutil.rmtree(releasedir,ignore_errors=True)
 
-shutil.rmtree("magentix2-export",ignore_errors=True)
 
 print "Done."
 
