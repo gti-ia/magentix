@@ -35,14 +35,8 @@ nomvn = "-nomvn" in sys.argv
 nosrc = "-nosrc" in sys.argv
 nozip = "-nozip" in sys.argv
 
-#try:
-#    release = sys.argv[1]
-#except:
-#    sys.exit("Missing parameter. Usage: " + sys.argv[0] + " releasenumber")
-
 from xml.etree.ElementTree import ElementTree
 release = ElementTree(file=".."+os.sep+"pom.xml").findtext("{http://maven.apache.org/POM/4.0.0}version")
-
 
 releasedir = "magentix2-"+str(release)
 shutil.rmtree(releasedir,ignore_errors=True)
@@ -81,7 +75,7 @@ if not nosrc:
 
 #copy files
 shutil.copytree(orig+os.sep+"bin", releasedir+os.sep+"bin")
-shutil.copytree("magentix2"+os.sep+"doc", releasedir+os.sep+"doc")
+os.mkdir(releasedir+os.sep+"doc")
 shutil.copytree(orig+os.sep+"lib", releasedir+os.sep+"lib")
 shutil.copytree(orig+os.sep+"webapps", releasedir+os.sep+"webapps")
 shutil.copytree(orig+os.sep+"configuration", releasedir+os.sep+"configuration")
@@ -93,6 +87,7 @@ shutil.copy(orig+os.sep+"magentix-setup.py", releasedir)
 shutil.copy(orig+os.sep+"magentix-setup.exe", releasedir)
 shutil.copy(".."+os.sep+"LICENSE.txt", releasedir)
 shutil.copy(".."+os.sep+"RELEASE_NOTES", releasedir)
+shutil.copy(".."+os.sep+"README.md", releasedir)
 
 if not nodoc:
     os.mkdir(releasedir+os.sep+"doc"+os.sep+"manual")
