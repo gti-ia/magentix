@@ -75,7 +75,7 @@ if not nosrc:
 
 #copy files
 shutil.copytree(orig+os.sep+"bin", releasedir+os.sep+"bin")
-os.mkdir(releasedir+os.sep+"doc")
+shutil.copytree(orig+os.sep+"doc", releasedir+os.sep+"doc")
 shutil.copytree(orig+os.sep+"lib", releasedir+os.sep+"lib")
 shutil.copytree(orig+os.sep+"webapps", releasedir+os.sep+"webapps")
 shutil.copytree(orig+os.sep+"configuration", releasedir+os.sep+"configuration")
@@ -88,6 +88,7 @@ shutil.copy(orig+os.sep+"magentix-setup.exe", releasedir)
 shutil.copy(".."+os.sep+"LICENSE.txt", releasedir)
 shutil.copy(".."+os.sep+"RELEASE_NOTES", releasedir)
 shutil.copy(".."+os.sep+"README.md", releasedir)
+shutil.copy(".."+os.sep+"INSTALL.md", releasedir)
 
 if not nodoc:
     os.mkdir(releasedir+os.sep+"doc"+os.sep+"manual")
