@@ -115,6 +115,17 @@ def line_prepender(filename,line):
 line_prepender(releasedir+os.sep+"Start-Magentix.sh", 'VERSION='+release+'\n\n')
 line_prepender(releasedir+os.sep+"Start-Magentix.bat", 'set VERSION='+release+'\n\n')
 
+
+#copy example scripts
+shutil.copytree("magentix2"+os.sep+"examples", releasedir+os.sep+"examples")
+
+unix_examples = ['Start-ArgumentationExample.sh', 'Start-BasicExample.sh', 'Start-httpInterfaceExample.sh', 'Start-OrganizationalExample.sh', 'Start-ThomasExample.sh']
+windows_examples = ['Start-ArgumentationExample.bat', 'Start-BasicExample.bat', 'Start-httpInterfaceExample.bat', 'Start-OrganizationalExample.bat', 'Start-ThomasExample.bat']
+for example in unix_examples:
+	line_prepender(releasedir+os.sep+'examples'+os.sep+example, 'VERSION='+release+'\n\n')
+for example in windows_examples:
+	line_prepender(releasedir+os.sep+'examples'+os.sep+example, 'set VERSION='+release+'\n\n')
+
 #Compile everything
 pwd = os.getcwd()
 if not nomvn:
@@ -140,9 +151,6 @@ if not nomvn:
   	print "WARNING: javac not found! You MUST install a java JDK (>=1.7)."
 
 os.chdir(pwd)
-
-#copy example scripts
-shutil.copytree("magentix2"+os.sep+"examples", releasedir+os.sep+"examples")
 
 #zip release
 if not nozip:
