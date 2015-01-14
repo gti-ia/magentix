@@ -1,3 +1,8 @@
+#intelliJ conguration files
+.idea
+
+*.iml
+
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -26,6 +31,7 @@ release.properties
 *.fls
 *.out
 *.toc
+
 
 ## Intermediate documents:
 *.dvi
@@ -101,7 +107,8 @@ release.properties
 # minitoc
 *.maf
 *.mtc
-*.mtc0
+*.mtc[0-9]
+*.mtc[0-9][0-9]
 
 # minted
 *.pyg
@@ -127,3 +134,4 @@ sympy-plots-for-*.tex/
 
 # xindy
 *.xdy
+
