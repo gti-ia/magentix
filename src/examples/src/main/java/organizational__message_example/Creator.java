@@ -117,7 +117,7 @@ public class Creator extends CAgent {
 			msg.setProtocol(InteractionProtocol.FIPA_REQUEST);
 			msg.setLanguage("ACL");
 
-			msg.setContent(4+" "+2);
+			msg.setContent(i+" "+j);
 
 			send(msg);
 
@@ -213,7 +213,8 @@ public class Creator extends CAgent {
 
 		@Override
 		public void run(CProcessor myProcessor, ACLMessage messageToSend) {
-			// TODO Auto-generated method stub
+
+
 
 		}
 
@@ -222,15 +223,7 @@ public class Creator extends CAgent {
 	class FINAL_SHUTDOWN_Method implements FinalStateMethod {
 		public void run(CProcessor myProcessor, ACLMessage responseMessage) {
 
-
-
 			try{
-
-
-
-
-				omsProxy.joinUnit("External", "Calculator");
-
 				boolean searching = true;
 				do{
 					int quantity = omsProxy.informQuantityMembers("Calculator", "", "member");
@@ -242,38 +235,9 @@ public class Creator extends CAgent {
 				}while(searching);
 
 				omsProxy.leaveRole("Manager", "Calculator");
-
-				ArrayList<ArrayList<String>> members = omsProxy.informMembers("Calculator", "", "member");
-
-
-				for(ArrayList<String> member : members)
-				{
-
-					omsProxy.deallocateRole(member.get(1), "Calculator", member.get(0));
-				}
-
-				omsProxy.deregisterRole("Operator", "Calculator");
-
-
 				omsProxy.deregisterRole("Manager", "Calculator");
-
-
-
-
-				do
-				{
-					m.waiting(3 * 1000);
-
-					members = omsProxy.informMembers("External", "Manager", "");
-				}while(members.contains("Noisy"));
-
-
-				omsProxy.deregisterUnit("External");
-
-
+				omsProxy.deregisterRole("Operator", "Calculator");
 				omsProxy.deregisterUnit("Calculator");
-
-
 				omsProxy.leaveRole("participant", "virtual");
 
 			}catch(THOMASException e)
