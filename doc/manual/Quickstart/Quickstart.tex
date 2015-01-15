@@ -29,7 +29,7 @@ $ ./magentix-setup.py
 \end{itemize}
 
 
-Then, a text interface for the installation is provided. This setup process will ask you some required users and passwords to configure and deploy the components needed by Magentix2. It will also check taht all the required dependencies are installed and properly configured. The setup script will ask you for the following data:
+Then, a text interface for the installation is provided. This setup process will ask you some required users and passwords to configure and deploy the components needed by Magentix2. It will also check that all the required dependencies are installed and properly configured. The setup script will ask you for the following data:
 \begin{itemize}
     \item MySQL root password: used to create the magentix user and create the database schema for the platform.
     \item Tomcat user and password: used to deploy the Magentix webservices to the tomcat app server. Note that the tomcat user \textbf{MUST} have the \texttt{manager-script} role to be able to deploy webapps. To do this add the following lines to your \texttt{tomcat-users.xml} file (located where your tomcat installation is or at \texttt{/etc/tomcat}), where USERNAME and PASSWORD must be changed by the user and password you assign to tomcat:

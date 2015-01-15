@@ -13,8 +13,14 @@
 
 \usepackage[footnotesize,bf]{caption} %para cambiar el tama�o de letra de la leyenda de las figuras y tablas, con las opciones indicadas pongo el tama�o de letra al tama�o de las notas al pie y "`Figura x"' en negrita.
 
-\usepackage[pdfborder={0 0 0},plainpages=false]{hyperref} %% para que las entradas de los indices se conviertan en v�nculos
+\usepackage[pdftex=true,pdfborder={0 0 0},plainpages=false,
+pdfauthor={GTI-IA Research Group},
+pdftitle={Magentix2 User's Manual version 2.1.0},
+pdfsubject={User guide with installation, configuration and administration instructions for Magentix2 platforms},
+pdfkeywords={Agent platforms, agents, organizations, web services, jason agents, argumentative agents}]{hyperref} %% para que las entradas de los indices se conviertan en vínculos. También añade información meta al pdf
 %\usepackage[pdftex=true,pdfborder={0 0 0},plainpages=false]{hyperref} %% para que las entradas de los indices se conviertan en v�nculos
+
+
 \usepackage{url}  % enter URLs like this: \url{http://www.stack.nl/~jwk/latex/}.
 \usepackage{fancybox}%Variants of \fbox and other games with boxes.
 \usepackage{times} %A package to use PostScript Times Roman as the default font.
@@ -24,6 +30,7 @@
 \usepackage{amsmath, amssymb}
 \usepackage{tabulary}
 \usepackage{longtable} % tablas largas
+\usepackage{multicol}
 
 \newtheorem{definition}{Definition}[section]
 
@@ -54,7 +61,7 @@
 %%%%%%% FIN FORMATO cabecera y pie
 
 %%%%%%%%%%%%%%%%% CONSTANTES %%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\MagentixVersion}{2.1}
+\newcommand{\MagentixVersion}{2.1.0}
 
 
 %%%%%%%%%%%%%%  FORMATO T�TULO CAP�TULOS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -309,7 +316,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearemptydoublepage
-\include{Prefaces/Acknowledgments}
+\include{Prefaces/acknowledgments}
+
+\clearemptydoublepage
+\include{Prefaces/contributors}
 
 \clearemptydoublepage
 \pagenumbering{arabic}

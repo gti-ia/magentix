@@ -35,14 +35,8 @@ nomvn = "-nomvn" in sys.argv
 nosrc = "-nosrc" in sys.argv
 nozip = "-nozip" in sys.argv
 
-#try:
-#    release = sys.argv[1]
-#except:
-#    sys.exit("Missing parameter. Usage: " + sys.argv[0] + " releasenumber")
-
 from xml.etree.ElementTree import ElementTree
 release = ElementTree(file=".."+os.sep+"pom.xml").findtext("{http://maven.apache.org/POM/4.0.0}version")
-
 
 releasedir = "magentix2-"+str(release)
 shutil.rmtree(releasedir,ignore_errors=True)
@@ -81,7 +75,7 @@ if not nosrc:
 
 #copy files
 shutil.copytree(orig+os.sep+"bin", releasedir+os.sep+"bin")
-shutil.copytree("magentix2"+os.sep+"doc", releasedir+os.sep+"doc")
+shutil.copytree(orig+os.sep+"doc", releasedir+os.sep+"doc")
 shutil.copytree(orig+os.sep+"lib", releasedir+os.sep+"lib")
 shutil.copytree(orig+os.sep+"webapps", releasedir+os.sep+"webapps")
 shutil.copytree(orig+os.sep+"configuration", releasedir+os.sep+"configuration")
@@ -92,7 +86,9 @@ shutil.copy(orig+os.sep+"Stop-Magentix.sh", releasedir)
 shutil.copy(orig+os.sep+"magentix-setup.py", releasedir)
 shutil.copy(orig+os.sep+"magentix-setup.exe", releasedir)
 shutil.copy(".."+os.sep+"LICENSE.txt", releasedir)
-shutil.copy(".."+os.sep+"RELEASE_NOTES", releasedir)
+shutil.copy(".."+os.sep+"ChangeLog.md", releasedir)
+shutil.copy(".."+os.sep+"README.md", releasedir)
+shutil.copy(".."+os.sep+"INSTALL.md", releasedir)
 
 if not nodoc:
     os.mkdir(releasedir+os.sep+"doc"+os.sep+"manual")
@@ -120,6 +116,17 @@ def line_prepender(filename,line):
 line_prepender(releasedir+os.sep+"Start-Magentix.sh", 'VERSION='+release+'\n\n')
 line_prepender(releasedir+os.sep+"Start-Magentix.bat", 'set VERSION='+release+'\n\n')
 
+
+#copy example scripts
+shutil.copytree("magentix2"+os.sep+"examples", releasedir+os.sep+"examples")
+
+unix_examples = ['Start-ArgumentationExample.sh', 'Start-BasicExample.sh', 'Start-httpInterfaceExample.sh', 'Start-OrganizationalExample.sh', 'Start-ThomasExample.sh']
+windows_examples = ['Start-ArgumentationExample.bat', 'Start-BasicExample.bat', 'Start-httpInterfaceExample.bat', 'Start-OrganizationalExample.bat', 'Start-ThomasExample.bat']
+for example in unix_examples:
+	line_prepender(releasedir+os.sep+'examples'+os.sep+example, 'VERSION='+release+'\n\n')
+for example in windows_examples:
+	line_prepender(releasedir+os.sep+'examples'+os.sep+example, 'set VERSION='+release+'\n\n')
+
 #Compile everything
 pwd = os.getcwd()
 if not nomvn:
@@ -145,9 +152,6 @@ if not nomvn:
   	print "WARNING: javac not found! You MUST install a java JDK (>=1.7)."
 
 os.chdir(pwd)
-
-#copy example scripts
-shutil.copytree("magentix2"+os.sep+"examples", releasedir+os.sep+"examples")
 
 #zip release
 if not nozip:

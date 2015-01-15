@@ -11,6 +11,12 @@ Magentix2 provides support at three levels:
 
 In order to offer these support levels, Magentix2 is formed by different building blocks, and provides technologies to the development and execution of Multiagent Systems.
 
+
+INSTALL
+----------------
+See INSTALL.md
+
+
 COMMUNICATION INFRASTRUCTURE
 -----------------------------
 
