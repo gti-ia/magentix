@@ -184,27 +184,7 @@ public class Display extends CAgent {
 			try {
 
 
-				ArrayList<String> result = omsProxy.informUnit("External");
 
-				System.out.println("---------------------");
-				System.out.println("unit external");
-				System.out.println("type: "+ result.get(0));
-				System.out.println("parent unit: "+ result.get(1));
-				System.out.println("---------------------");
-
-				ArrayList<ArrayList<String>> informUnitRoles = omsProxy.informUnitRoles("Calculator");
-
-				for(ArrayList<String> unitRole : informUnitRoles)
-				{
-					System.out.println("---------------------");
-
-					System.out.println("role name: "+unitRole.get(0));
-					System.out.println("position: "+ unitRole.get(1));
-					System.out.println("visibility: "+ unitRole.get(2));
-					System.out.println("accesibility: "+ unitRole.get(3));
-
-					System.out.println("---------------------");
-				}
 
 				omsProxy.leaveRole("Manager", "Calculator");
 

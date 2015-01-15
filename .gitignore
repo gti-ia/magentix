@@ -135,3 +135,5 @@ sympy-plots-for-*.tex/
 # xindy
 *.xdy
 
+#eclipse file
+.classpath

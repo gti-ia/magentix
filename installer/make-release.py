@@ -86,7 +86,7 @@ shutil.copy(orig+os.sep+"Stop-Magentix.sh", releasedir)
 shutil.copy(orig+os.sep+"magentix-setup.py", releasedir)
 shutil.copy(orig+os.sep+"magentix-setup.exe", releasedir)
 shutil.copy(".."+os.sep+"LICENSE.txt", releasedir)
-shutil.copy(".."+os.sep+"RELEASE_NOTES", releasedir)
+shutil.copy(".."+os.sep+"ChangeLog.md", releasedir)
 shutil.copy(".."+os.sep+"README.md", releasedir)
 shutil.copy(".."+os.sep+"INSTALL.md", releasedir)
 

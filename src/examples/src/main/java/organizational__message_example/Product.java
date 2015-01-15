@@ -293,7 +293,7 @@ public class Product extends CAgent {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+				omsProxy.leaveRole("Operator", "Calculator");
 				omsProxy.leaveRole("participant", "virtual");
 			} catch (THOMASException e) {
 				// TODO Auto-generated catch block
