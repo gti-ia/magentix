@@ -1304,7 +1304,7 @@ public class BaseAgent implements Runnable {
 	 *            Agent ID to look for
 	 * @return True if agent exists, false otherwise
 	 */
-	private boolean existAgent(AgentID aid) {
+	protected boolean existAgent(AgentID aid) {
 		return session.queueQuery(aid.name).get().getQueue() != null;
 	}
 
