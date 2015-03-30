@@ -312,7 +312,7 @@ public class BaseAgent implements Runnable {
 
 		} else {
 			if (AgentsConnection.connection == null) {
-				logger.error("Before create a agent, the qpid broker connection is necesary");
+				logger.error("Before create a agent, the qpid broker connection is necessary");
 				throw new Exception("Error doesn't work the broken connection");
 			} else {
 				this.connection = AgentsConnection.getConnection();
@@ -1304,7 +1304,7 @@ public class BaseAgent implements Runnable {
 	 *            Agent ID to look for
 	 * @return True if agent exists, false otherwise
 	 */
-	private boolean existAgent(AgentID aid) {
+	protected boolean existAgent(AgentID aid) {
 		return session.queueQuery(aid.name).get().getQueue() != null;
 	}
 
