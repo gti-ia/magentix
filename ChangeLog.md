@@ -1,3 +1,10 @@
+## 2.1.1 (2015-03-30)
+
+Features:
+
+  - Changed BaseAgent.existAgent to protected.
+  - Added new unittests for BaseAgent.existAgent.
+
 ## 2.1.0 (2015-01-16)
 
 Features:
@@ -23,8 +30,3 @@ Bugfixes:
 Features:
 
   - Support for the new version of the THOMAS specification.
-
-
-
-
-
