@@ -13,7 +13,6 @@ Features:
   - Normative Context support for virtual organizations
   - Improved the synchronization among CAgents conversations
 
-
 Bugfixes:
 
   - Fixed an issue when a conversation is created and participant agents start before initiator agents.
@@ -30,3 +29,4 @@ Bugfixes:
 Features:
 
   - Support for the new version of the THOMAS specification.
+
